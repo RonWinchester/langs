@@ -31,7 +31,7 @@ services:
       - app_network
     ports:
       - "5000:5000"
-    command: npm run dev
+    command: pnpm run dev
 
   frontend:
     build: ./frontend
@@ -46,7 +46,7 @@ services:
       - app_network
     ports:
       - "3000:3000"
-    command: npm run dev
+    command: pnpm run dev
 
 volumes:
   postgres_data:

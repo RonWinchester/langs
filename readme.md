@@ -103,7 +103,7 @@ POSTGRES_DB=myappdb
 |---------|-----------|
 | `docker-compose -f docker-compose.prod.yml up -d --build` | Собрать и запустить prod-окружение |
 | `docker-compose -f docker-compose.prod.yml down` | Остановить prod-окружение |
-| `docker-compose -f docker-compose.prod.yml exec backend npm run migrate` | Выполнить миграции БД |
+| `docker-compose -f docker-compose.prod.yml exec backend pnpm run migrate` | Выполнить миграции БД |
 
 ### ⚙ Общие команды
 | Команда | Описание |
