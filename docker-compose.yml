@@ -8,6 +8,8 @@ services:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - app_network
     healthcheck:
@@ -17,11 +19,15 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    build:
+      context: .                   # Корневой контекст монорепозитория
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend:/app/backend      # Монтируем исходники backend с хоста
+      # Если хотите, чтобы node_modules использовались из образа, можно не монтировать их
+      # Или используйте отдельный именованный volume для node_modules:
+      # - backend_node_modules:/app/backend/node_modules
     env_file:
       - .env
     depends_on:
@@ -34,12 +40,16 @@ services:
     command: pnpm run dev
 
   frontend:
-    build: ./frontend
+    build:
+      context: .                   # Корневой контекст монорепозитория
+      dockerfile: frontend/Dockerfile
     restart: unless-stopped
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/dist
+      - ./frontend:/app/frontend    # Монтируем исходники фронтенда с хоста
+      # Аналогично, можно использовать volume для node_modules, если не хотите перезаписывать установленные зависимости
+      # - frontend_node_modules:/app/frontend/node_modules
+    env_file:
+      - .env
     depends_on:
       - backend
     networks:
@@ -50,6 +60,9 @@ services:
 
 volumes:
   postgres_data:
+  # При использовании именованных volume для node_modules:
+  # backend_node_modules:
+  # frontend_node_modules:
 
 networks:
   app_network:

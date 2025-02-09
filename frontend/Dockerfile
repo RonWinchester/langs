@@ -4,11 +4,16 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY package*.json pnpm-lock.yaml ./
+ENV CI=true
 
-RUN pnpm install
+COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 COPY . .
 
+WORKDIR /app/frontend
+
+RUN pnpm install --frozen-lockfile
+
 EXPOSE 3000
+
 CMD ["pnpm", "run", "dev"]

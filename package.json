@@ -1,5 +1,13 @@
 {
     "name": "langs",
     "private": true,
-    "version": "0.0.0"
-}
+    "workspaces": [
+      "backend",
+      "frontend"
+    ],
+    "scripts": {
+      "install:all": "pnpm install",
+      "build": "pnpm -r run build"
+    }
+  }
+  
