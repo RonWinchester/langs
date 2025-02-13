@@ -13,9 +13,6 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Hello from Express + TypeScript backend!");
-});
 
 app.use(
     "/trpc",
@@ -23,6 +20,10 @@ app.use(
         router: trpcRouter,
     }),
 );
+
+app.get("/", (req, res) => {
+    res.send("Hello from Express + TypeScript backend!");
+});
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
