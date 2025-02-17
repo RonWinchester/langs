@@ -6,7 +6,15 @@ const langs = [
     {
         id: 1,
         name: "English",
-    }
+    },
+    {
+        id: 2,
+        name: "Русский",
+    },
+    {
+        id: 3,
+        name: "Deutsch",
+    },
 ]
 
 export const trpcRouter = trpc.router(

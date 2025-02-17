@@ -1,11 +1,18 @@
 import "./App.css";
-import LangsPage from "./pages/AllLangPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import { getAllCardsRoute, getCardRoute } from "./lib/routes";
+import AllCardsPage from "./pages/AllCards";
+import Card from "./pages/Card";
 
 function App() {
     return (
-        <div>
-            <LangsPage />
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path={getAllCardsRoute()} element={<AllCardsPage />} />
+                <Route path={getCardRoute(":id")} element={<Card />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

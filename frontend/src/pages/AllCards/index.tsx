@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
+
+import { getCardRoute } from "../../lib/routes";
 import { trpc } from "../../lib/trpc";
-const LangsPage = () => {
+const AllCardsPage = () => {
     const { data, isError, isLoading } = trpc.getLangs.useQuery();
 
     if (isError) {
@@ -12,10 +15,10 @@ const LangsPage = () => {
     return (
         <div>
             {data.map((lang) => (
-                <span key={lang.id}>{lang.name}</span>
+                <Link to={getCardRoute(lang.id)} key={lang.id}>{lang.name}</Link>
             ))}
         </div>
     );
 };
 
-export default LangsPage;
+export default AllCardsPage;
