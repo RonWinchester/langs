@@ -1,0 +1,21 @@
+.wrapper {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.button {
+   position: absolute;
+   top: 1rem;
+   left: 1rem;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    height: 100%;
+    padding: 4rem 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}

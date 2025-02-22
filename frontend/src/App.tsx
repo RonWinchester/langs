@@ -1,16 +1,21 @@
-import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import { Layout } from "./components";
 import { getAllCardsRoute, getCardRoute } from "./lib/routes";
-import AllCardsPage from "./pages/AllCards";
-import Card from "./pages/Card";
+import Card from "./pages/Card/ui/Card";
+import Cards from "./pages/Cards";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path={getAllCardsRoute()} element={<AllCardsPage />} />
-                <Route path={getCardRoute(":id")} element={<Card />} />
+                <Route element={<Layout />}>
+                    <Route
+                        path={getAllCardsRoute()}
+                        element={<Cards />}
+                    />
+                    <Route path={getCardRoute(":id")} element={<Card />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     );

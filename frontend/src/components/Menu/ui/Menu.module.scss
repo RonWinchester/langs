@@ -1,0 +1,21 @@
+.aside {
+    position: absolute;
+    left: -300px;
+    width: 300px;
+    height: 100%;
+    background-color: #f4f4f4;
+    transition: left 0.3s ease;
+    z-index: 10;
+    top: 0;
+    padding: 3rem 1rem;
+}
+
+.aside.open {
+    left: 0;
+}
+
+.button {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
