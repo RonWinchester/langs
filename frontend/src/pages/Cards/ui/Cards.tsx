@@ -18,7 +18,9 @@ const Cards = () => {
     return (
         <div className={style.wrapper}>
             {data.cards.map((card) => (
-                <Link to={getCardRoute(card.id)} key={card.id}>{card.theme}</Link>
+                <Link to={getCardRoute(card.id)} key={card.id}>
+                    {card.theme}
+                </Link>
             ))}
         </div>
     );
