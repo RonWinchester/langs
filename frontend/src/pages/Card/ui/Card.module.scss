@@ -9,6 +9,46 @@
     gap: 0.5rem;
 }
 
+
+.container {
+    transition: background-color 0.3s;
+}
+
+.flashGreen {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+.flashRed {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
 .word {
+    padding: 10px;
+    border: 2px solid transparent;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.word.selected {
+    border-color: green;
+}
+
+.word.matched {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.word.error {
+    border-color: red;
+}
+
+.congrats {
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
 }
