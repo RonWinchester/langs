@@ -2,14 +2,19 @@ import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Layout } from "./components";
-import { getAllCardsRoute, getCardRoute } from "./lib/routes";
+import { GET_ALL_CARDS, getCardRoute, ADD_CARD } from "./lib/routes";
+import AddCard from "./pages/AddCard";
 import Card from "./pages/Card/";
 import Cards from "./pages/Cards";
 
 const routesConfig = [
     {
-        path: getAllCardsRoute(),
+        path: GET_ALL_CARDS,
         component: Cards,
+    },
+    {
+        path: ADD_CARD,
+        component: AddCard,
     },
     {
         path: getCardRoute(":id"),

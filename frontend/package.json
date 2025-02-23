@@ -20,7 +20,10 @@
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.15.0",
-        "sass": "^1.85.0"
+        "formik": "^2.4.4",
+        "formik-validator-zod": "^1.0.2",
+        "sass": "^1.85.0",
+        "zod": "^3.22.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.20.0",
