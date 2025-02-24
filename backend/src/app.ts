@@ -1,9 +1,9 @@
-import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import { trpcRouter } from "./trpc";
+import { applyTrpcToApp } from "./lib/trpc";
+import { trpcRouter } from "./router";
 
 dotenv.config();
 
@@ -14,12 +14,7 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
-app.use(
-    "/trpc",
-    trpcExpress.createExpressMiddleware({
-        router: trpcRouter,
-    }),
-);
+applyTrpcToApp(app, trpcRouter);
 
 app.get("/", (req, res) => {
     res.send("Hello from Express + TypeScript backend!");

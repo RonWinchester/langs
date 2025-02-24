@@ -1,4 +1,4 @@
-import type { TrpcRouter } from "@langs/backend/src/trpc";
+import type { TrpcRouter } from "@langs/backend/src/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact, httpBatchLink } from "@trpc/react-query";
 

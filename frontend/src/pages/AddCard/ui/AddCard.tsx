@@ -1,25 +1,24 @@
+import { createCardInput } from "@langs/backend/src/router/createCard/input";
 import { useFormik } from "formik";
 import {withZodSchema} from "formik-validator-zod";
-import {z} from "zod";
 
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
 import { classNames } from "../../../lib/classNames/classNames";
+import { trpc } from "../../../lib/trpc";
 
 import style from "./AddCard.module.scss";
 
 const AddCard = () => {
+    const createCard = trpc.createCard.useMutation();
     const formik = useFormik({
         initialValues: {
             theme: "",
             description: "",
         },
-        validate: withZodSchema(z.object({
-            theme: z.string().min(3),
-            description: z.string().min(10),
-        })),
-        onSubmit: (values) => {
-            console.log(values);
+        validate: withZodSchema(createCardInput),
+        onSubmit: async (values) => {
+            await createCard.mutateAsync(values);
         },
     });
     return (
