@@ -24,19 +24,16 @@ services:
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     volumes:
-      - ./backend:/app/backend      # Монтируем исходники backend с хоста
+      - ./:/app      # Монтируем исходники backend с хоста
       # Если хотите, чтобы node_modules использовались из образа, можно не монтировать их
       # Или используйте отдельный именованный volume для node_modules:
       # - backend_node_modules:/app/backend/node_modules
     env_file:
       - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - app_network
     ports:
-      - "5000:5000"
+      - "5050:5000"
     command: pnpm run dev
 
   frontend:
@@ -45,7 +42,7 @@ services:
       dockerfile: frontend/Dockerfile
     restart: unless-stopped
     volumes:
-      - ./frontend:/app/frontend    # Монтируем исходники фронтенда с хоста
+      - ./:/app    # Монтируем исходники фронтенда с хоста
       # Аналогично, можно использовать volume для node_modules, если не хотите перезаписывать установленные зависимости
       # - frontend_node_modules:/app/frontend/node_modules
     env_file:

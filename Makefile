@@ -2,12 +2,22 @@ DCOMPOSE = docker-compose
 
 .PHONY: dev down clean restart frontend backend db-up db-down db-shell db-clean
 
+base:
+	@docker build -t localhost/pnpm - < Dockerfile
+
+cli:
+	@docker run --rm -it -v $(CURDIR):/app -w /app localhost/pnpm sh
+
+backend/node_modules:
+	@docker run --rm -it -v $(CURDIR):/app -w /app localhost/pnpm \
+		pnpm install --filter ./backend
+
+frontend/node_modules:
+	@docker run --rm -it -v $(CURDIR):/app -w /app localhost/pnpm \
+		pnpm install --filter ./frontend
+
 # Команда dev устанавливает зависимости локально (чтобы node_modules были на хосте) и поднимает все контейнеры
-dev:
-	@echo "Установка зависимостей локально..."
-	pnpm install --filter ./backend
-	pnpm install --filter ./frontend
-	@echo "Поднимаем контейнеры..."
+dev: base frontend/node_modules backend/node_modules
 	$(DCOMPOSE) up --build -d
 
 # Остановка всех контейнеров
@@ -18,6 +28,7 @@ down:
 clean:
 	rm -rf frontend/node_modules frontend/dist
 	rm -rf backend/node_modules backend/dist
+	rm -rf node_modules
 	$(DCOMPOSE) down -v
 
 # Перезапуск

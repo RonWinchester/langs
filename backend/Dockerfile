@@ -1,7 +1,4 @@
-FROM node:18-alpine
-
-# Устанавливаем pnpm глобально
-RUN npm install -g pnpm
+FROM localhost/pnpm
 
 # Устанавливаем рабочую директорию в корне монорепозитория
 WORKDIR /app
