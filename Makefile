@@ -29,7 +29,13 @@ prisma/generate:
 dev: base frontend/node_modules backend/node_modules
 	$(DCOMPOSE) up --build -d
 
-# Остановка всех контейнеров
+stop:
+	$(DCOMPOSE) stop
+
+start:
+	@$(DCOMPOSE) start
+	
+# Остановка и удаление всех контейнеров 
 down:
 	$(DCOMPOSE) down
 
