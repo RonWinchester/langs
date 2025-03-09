@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -14,21 +15,27 @@ const Card = () => {
 
     const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
     const [selectedRight, setSelectedRight] = useState<number | null>(null);
-    const [pairs, setPairs] = useState<{ left: number, right: number }[]>([]);
+    const [pairs, setPairs] = useState<{ left: number; right: number }[]>([]);
     const [matchSuccess, setMatchSuccess] = useState(false);
     const [matchError, setMatchError] = useState(false);
     const [gameCompleted, setGameCompleted] = useState(false);
 
     useEffect(() => {
         if (selectedLeft !== null && selectedRight !== null) {
-            console.log("Выбранные слова:", { left: selectedLeft, right: selectedRight });
+            console.log("Выбранные слова:", {
+                left: selectedLeft,
+                right: selectedRight,
+            });
 
             const isMatch = selectedLeft === selectedRight;
 
             if (isMatch) {
                 setMatchSuccess(true);
                 setTimeout(() => {
-                    setPairs((prev) => [...prev, { left: selectedLeft, right: selectedRight }]);
+                    setPairs((prev) => [
+                        ...prev,
+                        { left: selectedLeft, right: selectedRight },
+                    ]);
                     setMatchSuccess(false);
                     setSelectedLeft(null);
                     setSelectedRight(null);
@@ -62,8 +69,14 @@ const Card = () => {
     };
 
     return (
-        <div className={classNames(style.container, { [style.flashGreen]: matchSuccess, [style.flashRed]: matchError })}>
+        <div
+            className={classNames(style.container, {
+                [style.flashGreen]: matchSuccess,
+                [style.flashRed]: matchError,
+            })}
+        >
             <h1>{data.theme}</h1>
+            {data.createdAt && <span>created: {format(new Date(data.createdAt), "yyyy-mm-dd")}</span>}
             {gameCompleted ? (
                 <div className={style.congrats}>
                     <h2>Поздравляю!</h2>
@@ -73,19 +86,27 @@ const Card = () => {
                 <div className={style.wrapper}>
                     <div className={classNames(style.words, {}, [style.left])}>
                         {data.leftWords
-                            .sort((a, b) => (pairs.some(p => p.left === a.id) ? -1 : 1))
+                            .sort((a, b) =>
+                                pairs.some((p) => p.left === a.id) ? -1 : 1,
+                            )
                             .map((word) => (
                                 <div
                                     key={word.id}
-                                    className={classNames(
-                                        style.word,
-                                        {
-                                            [style.selected]: selectedLeft === word.id,
-                                            [style.matched]: pairs.some(p => p.left === word.id),
-                                            [style.error]: matchError && selectedLeft === word.id,
-                                        }
-                                    )}
-                                    onClick={() => !pairs.some(p => p.left === word.id) && setSelectedLeft(word.id)}
+                                    className={classNames(style.word, {
+                                        [style.selected]:
+                                            selectedLeft === word.id,
+                                        [style.matched]: pairs.some(
+                                            (p) => p.left === word.id,
+                                        ),
+                                        [style.error]:
+                                            matchError &&
+                                            selectedLeft === word.id,
+                                    })}
+                                    onClick={() =>
+                                        !pairs.some(
+                                            (p) => p.left === word.id,
+                                        ) && setSelectedLeft(word.id)
+                                    }
                                 >
                                     {word.text}
                                 </div>
@@ -93,19 +114,27 @@ const Card = () => {
                     </div>
                     <div className={classNames(style.words, {}, [style.right])}>
                         {data.rightWords
-                            .sort((a, b) => (pairs.some(p => p.right === a.id) ? -1 : 1))
+                            .sort((a, b) =>
+                                pairs.some((p) => p.right === a.id) ? -1 : 1,
+                            )
                             .map((word) => (
                                 <div
                                     key={word.id}
-                                    className={classNames(
-                                        style.word,
-                                        {
-                                            [style.selected]: selectedRight === word.id,
-                                            [style.matched]: pairs.some(p => p.right === word.id),
-                                            [style.error]: matchError && selectedRight === word.id,
-                                        }
-                                    )}
-                                    onClick={() => !pairs.some(p => p.right === word.id) && setSelectedRight(word.id)}
+                                    className={classNames(style.word, {
+                                        [style.selected]:
+                                            selectedRight === word.id,
+                                        [style.matched]: pairs.some(
+                                            (p) => p.right === word.id,
+                                        ),
+                                        [style.error]:
+                                            matchError &&
+                                            selectedRight === word.id,
+                                    })}
+                                    onClick={() =>
+                                        !pairs.some(
+                                            (p) => p.right === word.id,
+                                        ) && setSelectedRight(word.id)
+                                    }
                                 >
                                     {word.text}
                                 </div>

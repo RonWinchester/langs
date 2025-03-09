@@ -16,6 +16,15 @@ frontend/node_modules:
 	@docker run --rm -it -v $(CURDIR):/app -w /app localhost/pnpm \
 		pnpm install --filter ./frontend
 
+prisma/migrate:
+	@docker exec -it langs-backend-1 pnpm pmd $(DESCRIPTION)
+
+# make prisma/migrate DESCRIPTION="create_users_table"
+
+prisma/generate:
+	@docker exec -it langs-backend-1 pnpm pgc
+
+
 # Команда dev устанавливает зависимости локально (чтобы node_modules были на хосте) и поднимает все контейнеры
 dev: base frontend/node_modules backend/node_modules
 	$(DCOMPOSE) up --build -d

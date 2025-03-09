@@ -6,15 +6,22 @@
     "scripts": {
         "start": "node dist/app.js",
         "build": "tsc",
-        "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+        "dev": "ts-node-dev --respawn --transpile-only --watch ./.env --rs --exit-child src/app.ts",
         "typecheck": "tsc --noEmit --project tsconfig.json",
         "lint": "eslint .",
-        "format": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'"
+        "format": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
+        "pmd": "prisma migrate dev",
+        "pgc": "prisma generate",
+        "prepare": "pnpm pgc"
+    },
+    "prisma": {
+        "schema": "./src/prisma/schema.prisma"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@prisma/client": "^6.4.1",
         "@trpc/server": "^10.45.2",
         "cors": "^2.8.5",
         "dotenv": "^16.4.7",
@@ -27,14 +34,15 @@
         "@eslint/js": "^9.19.0",
         "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
-        "@types/node": "^22.13.1",
         "@types/lodash": "^4.14.198",
+        "@types/node": "^22.13.1",
         "@typescript-eslint/eslint-plugin": "^8.24.0",
         "@typescript-eslint/parser": "^8.24.0",
         "eslint": "^9.20.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-import": "^2.31.0",
         "prettier": "^3.4.2",
+        "prisma": "^6.4.1",
         "ts-node-dev": "^2.0.0",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.22.0"
