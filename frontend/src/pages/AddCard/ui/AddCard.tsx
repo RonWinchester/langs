@@ -9,11 +9,20 @@ import { classNames } from "../../../lib/classNames/classNames";
 import { trpc } from "../../../lib/trpc";
 
 import style from "./AddCard.module.scss";
+import { WordInputForm } from "./AddWordForm/WordInputForm";
 
 const AddCard = () => {
+    const createWords = trpc.createWord.useMutation();
     const createCard = trpc.createCard.useMutation();
+
+    const [cardId, setCardId] = useState<number | null>(null);
+    const [words, setWords] = useState<
+        { original: string; translation: string }[]
+    >([]);
+
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             theme: "",
@@ -22,11 +31,10 @@ const AddCard = () => {
         validate: withZodSchema(createCardInput),
         onSubmit: async (values) => {
             try {
-                await createCard.mutateAsync(values);
+                const newCard = await createCard.mutateAsync(values);
+                setCardId(newCard.id);
                 setSuccess(true);
-                setTimeout(() => {
-                    setSuccess(false);
-                }, 2000);
+                setTimeout(() => setSuccess(false), 2000);
             } catch (error) {
                 setError(true);
                 setTimeout(() => {
@@ -35,6 +43,19 @@ const AddCard = () => {
             }
         },
     });
+
+    const handleAddWord = async (word: {
+        original: string;
+        translation: string;
+    }) => {
+        if (!cardId) return;
+        try {
+            await createWords.mutateAsync({ ...word, cardId });
+            setWords([...words, word]);
+        } catch (err) {
+            console.error("Ошибка при добавлении слова", err);
+        }
+    };
     return (
         <div>
             <h1>AddCard</h1>
@@ -63,6 +84,20 @@ const AddCard = () => {
                     Submit
                 </button>
             </form>
+
+            {cardId && (
+                <div>
+                    <h2>Добавить слова</h2>
+                    <WordInputForm onAddWord={handleAddWord} />
+                    <ul>
+                        {words.map((word, index) => (
+                            <li key={index}>
+                                {word.original} - {word.translation}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };
