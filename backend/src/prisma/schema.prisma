@@ -24,3 +24,10 @@ model Word {
 
   card        Cards    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
+
+model User {
+    id          Int      @id @default(autoincrement())
+    name        String   @unique
+    password    String
+    createdAt   DateTime @default(now())
+}
