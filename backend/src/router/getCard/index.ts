@@ -1,4 +1,4 @@
-import { create } from "lodash";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { trpc } from "../../lib/trpc";
@@ -7,18 +7,33 @@ export const getCardTrpcRoute = trpc.procedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
         const card = await ctx.prisma.cards.findUnique({
-            where: {
-                id: input.id,
-            },
-            select: {
-                theme: true,
-                createdAt: true,
-            }
+            where: { id: input.id },
+            include: { pairs: true }, // Получаем слова, связанные с карточкой
         });
 
+        if (!card) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Карточка не найдена",
+            });
+        }
+
+        const leftWords = card.pairs.map((word) => ({
+            id: word.id,
+            text: word.original,
+        }));
+        const rightWords = shuffleArray(
+            card.pairs.map((word) => ({ id: word.id, text: word.translation })),
+        );
+
         return {
-            ...card,
-            leftWords: [{ id: 1, text: "1" }],
-            rightWords: [{ id: 1, text: "1" }],
+            theme: card.theme,
+            createdAt: card.createdAt,
+            leftWords,
+            rightWords,
         };
     });
+
+const shuffleArray = <T>(array: T[]): T[] => {
+    return array.sort(() => Math.random() - 0.5);
+};

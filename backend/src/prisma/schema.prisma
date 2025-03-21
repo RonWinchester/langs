@@ -12,4 +12,15 @@ model Cards {
     theme       String   @unique
     description String
     createdAt   DateTime @default(now())
+
+    pairs       Word[]
+}
+
+model Word {
+  id          Int      @id @default(autoincrement())
+  cardId      Int
+  original    String
+  translation String
+
+  card        Cards    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }

@@ -22,11 +22,6 @@ const Card = () => {
 
     useEffect(() => {
         if (selectedLeft !== null && selectedRight !== null) {
-            console.log("Выбранные слова:", {
-                left: selectedLeft,
-                right: selectedRight,
-            });
-
             const isMatch = selectedLeft === selectedRight;
 
             if (isMatch) {
