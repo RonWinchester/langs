@@ -5,13 +5,15 @@ import { createUserTrpcRoute } from "./createUser";
 import { createWordsTrpcRoute } from "./createWords";
 import { getCardTrpcRoute } from "./getCard";
 import { getCardsTrpcRoute } from "./getCards";
+import { signInTrpcRoute } from "./signIn";
 
 export const trpcRouter = trpc.router({
     getCards: getCardsTrpcRoute,
     getCard: getCardTrpcRoute,
     createCard: createCardTrpcRoute,
     createWord: createWordsTrpcRoute,
-    createUser: createUserTrpcRoute
+    createUser: createUserTrpcRoute,
+    signIn: signInTrpcRoute,
 });
 
 export type TrpcRouter = typeof trpcRouter;

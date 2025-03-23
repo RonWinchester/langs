@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { classNames } from "../../../lib/classNames/classNames";
-import { ADD_CARD, GET_ALL_CARDS, SIGNUP } from "../../../lib/routes";
+import { ADD_CARD, GET_ALL_CARDS, SIGNIN, SIGNUP } from "../../../lib/routes";
 
 import style from "./Menu.module.scss";
 
@@ -20,6 +20,7 @@ const Menu = ({
             <Link to={GET_ALL_CARDS}>На главную</Link>
             <Link to={ADD_CARD}>Добавить карточку</Link>
             <Link to={SIGNUP}>Регистрация</Link>
+            <Link to={SIGNIN}>Войти</Link>
         </aside>
     );
 };

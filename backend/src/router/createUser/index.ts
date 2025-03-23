@@ -1,6 +1,6 @@
-import crypto from "crypto";
 
 import { trpc } from "../../lib/trpc";
+import { getPassword } from "../../utils";
 
 import { createUserInput } from "./validation";
 
@@ -19,7 +19,7 @@ export const createUserTrpcRoute = trpc.procedure
         await ctx.prisma.user.create({
             data: {
                 name: input.name,
-                password: crypto.createHash("sha256").update(input.password).digest("hex"),
+                password: getPassword(input.password),
             },
         });
     });

@@ -2,10 +2,17 @@ import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Layout } from "./components";
-import { GET_ALL_CARDS, getCardRoute, ADD_CARD, SIGNUP } from "./lib/routes";
+import {
+    GET_ALL_CARDS,
+    getCardRoute,
+    ADD_CARD,
+    SIGNUP,
+    SIGNIN,
+} from "./lib/routes";
 import AddCard from "./pages/AddCard";
 import Card from "./pages/Card/";
 import Cards from "./pages/Cards";
+import Signin from "./pages/SignIn";
 import Signup from "./pages/SignUp";
 
 const routesConfig = [
@@ -23,8 +30,12 @@ const routesConfig = [
     },
     {
         path: SIGNUP,
-        component: Signup
-    }
+        component: Signup,
+    },
+    {
+        path: SIGNIN,
+        component: Signin,
+    },
 ];
 
 function App() {
