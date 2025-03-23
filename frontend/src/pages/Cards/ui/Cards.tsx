@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { getCardRoute } from "../../../lib/routes";
+import { getCardRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
 
 import style from "./Cards.module.scss";
