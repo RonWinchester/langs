@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 
 import { AppContext, createAppContext } from "./lib/cts";
+import { applyPassportToExpress } from "./lib/passport";
 import { applyTrpcToApp } from "./lib/trpc";
 import { trpcRouter } from "./router";
 
@@ -15,6 +16,7 @@ let ctx: AppContext | null = null;
         app.use(cors());
         const port = process.env.PORT || 5000;
         app.use(express.json());
+        applyPassportToExpress(app, ctx);
         applyTrpcToApp(app, ctx, trpcRouter);
 
         app.get("/", (req, res) => {

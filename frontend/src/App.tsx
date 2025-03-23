@@ -8,11 +8,13 @@ import {
     ADD_CARD,
     SIGNUP,
     SIGNIN,
+    SIGNOUT
 } from "./lib/routes";
 import AddCard from "./pages/AddCard";
 import Card from "./pages/Card/";
 import Cards from "./pages/Cards";
 import Signin from "./pages/SignIn";
+import Signout from "./pages/SignOut";
 import Signup from "./pages/SignUp";
 
 const routesConfig = [
@@ -36,6 +38,10 @@ const routesConfig = [
         path: SIGNIN,
         component: Signin,
     },
+    {
+        path: SIGNOUT,
+        component: Signout
+    }
 ];
 
 function App() {

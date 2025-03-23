@@ -1,7 +1,9 @@
 import { createUserInput } from "@langs/backend/src/router/createUser/validation";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
+import Cookies from "js-cookie";
 import { memo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import Input from "../../../components/Input";
@@ -15,10 +17,10 @@ interface SignupProps {
 }
 
 const Signup = memo(({ className, ...otherProps }: SignupProps) => {
+    const navigate = useNavigate();
     const createUser = trpc.createUser.useMutation();
-    const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
-
+    const trpcUtils = trpc.useUtils();
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -43,10 +45,10 @@ const Signup = memo(({ className, ...otherProps }: SignupProps) => {
         onSubmit: async (values) => {
             try {
                 setError(false);
-                await createUser.mutateAsync(values);
-                formik.resetForm();
-                setSuccess(true);
-                setTimeout(() => setSuccess(false), 2000);
+                const { token } = await createUser.mutateAsync(values);
+                Cookies.set("token", token, { expires: 30 });
+                await trpcUtils.invalidate();
+                navigate("/");
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 setError(error.message);
@@ -76,7 +78,6 @@ const Signup = memo(({ className, ...otherProps }: SignupProps) => {
                     type="password"
                     formik={formik}
                 />
-                {success && <div className={style.success}>Success</div>}
                 {error && <div className={style.error}>Error</div>}
                 <button type="submit" disabled={formik.isSubmitting}>
                     Signup

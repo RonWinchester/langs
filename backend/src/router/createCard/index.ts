@@ -5,6 +5,9 @@ import { createCardInput } from "./input";
 export const createCardTrpcRoute = trpc.procedure
     .input(createCardInput)
     .mutation(async ({ ctx, input }) => {
+        if(!ctx.user) {
+            throw new Error("Вы не авторизованы");
+        }
         const existingCard = await ctx.prisma.cards.findUnique({
             where: {
                 theme: input.theme,

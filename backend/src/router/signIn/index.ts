@@ -1,6 +1,7 @@
 
 import { trpc } from "../../lib/trpc";
-import { getPassword } from "../../utils";
+import { getPassword } from "../../utils/getPassword";
+import { signJWT } from "../../utils/signJWT";
 
 import { signInInput } from "./validation";
 
@@ -18,5 +19,7 @@ export const signInTrpcRoute = trpc.procedure
             throw new Error("Не правильное имя пользователя или пароль");
         }
 
-        return true
+        const token = signJWT(existingUser.id);
+
+        return { token };
     });
