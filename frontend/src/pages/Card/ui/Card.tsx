@@ -72,6 +72,7 @@ const Card = () => {
         >
             <h1>{data.theme}</h1>
             {data.createdAt && <span>created: {format(new Date(data.createdAt), "yyyy-mm-dd")}</span>}
+            <span>Author: {data.author.name}</span>
             {gameCompleted ? (
                 <div className={style.congrats}>
                     <h2>Поздравляю!</h2>

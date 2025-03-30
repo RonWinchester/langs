@@ -8,7 +8,15 @@ export const getCardTrpcRoute = trpc.procedure
     .query(async ({ ctx, input }) => {
         const card = await ctx.prisma.cards.findUnique({
             where: { id: input.id },
-            include: { pairs: true }, // Получаем слова, связанные с карточкой
+            include: {
+                pairs: true,
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
         });
 
         if (!card) {
@@ -31,6 +39,7 @@ export const getCardTrpcRoute = trpc.procedure
             createdAt: card.createdAt,
             leftWords,
             rightWords,
+            author: card.author,
         };
     });
 

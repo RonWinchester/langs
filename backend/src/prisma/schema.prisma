@@ -12,22 +12,25 @@ model Cards {
     theme       String   @unique
     description String
     createdAt   DateTime @default(now())
+    authorId    Int
 
-    pairs       Word[]
+    author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    pairs  Word[]
 }
 
 model Word {
-  id          Int      @id @default(autoincrement())
-  cardId      Int
-  original    String
-  translation String
+    id          Int    @id @default(autoincrement())
+    cardId      Int
+    original    String
+    translation String
 
-  card        Cards    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+    card Cards @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id          Int      @id @default(autoincrement())
-    name        String   @unique
-    password    String
-    createdAt   DateTime @default(now())
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    password  String
+    createdAt DateTime @default(now())
+    cards     Cards[]
 }

@@ -18,6 +18,6 @@ export const createCardTrpcRoute = trpc.procedure
             throw new Error("Карточка с таким названием уже существует");
         }
         return await ctx.prisma.cards.create({
-            data: input,
+            data: {...input, authorId: ctx.user.id},
         });
     });
