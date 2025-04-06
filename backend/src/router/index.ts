@@ -1,3 +1,5 @@
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+
 import { trpc } from "../lib/trpc";
 
 import { createCardTrpcRoute } from "./createCard";
@@ -21,3 +23,5 @@ export const trpcRouter = trpc.router({
 });
 
 export type TrpcRouter = typeof trpcRouter;
+export type TrpcRouterInput = inferRouterInputs<TrpcRouter>;
+export type TrpcRouterOutput = inferRouterOutputs<TrpcRouter>;

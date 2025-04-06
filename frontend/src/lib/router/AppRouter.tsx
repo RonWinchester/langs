@@ -5,6 +5,7 @@ import { Layout } from "../../components";
 import AddCard from "../../pages/AddCard";
 import Card from "../../pages/Card";
 import Cards from "../../pages/Cards";
+import Edit from "../../pages/Edit";
 import Signin from "../../pages/SignIn";
 import Signout from "../../pages/SignOut";
 import Signup from "../../pages/SignUp";
@@ -17,6 +18,7 @@ import {
     SIGNUP,
     SIGNIN,
     SIGNOUT,
+    getEditRoute,
 } from "./routes";
 
 const routesConfig = [
@@ -44,6 +46,11 @@ const routesConfig = [
     {
         path: SIGNOUT,
         component: <Signout />,
+        authOnly: true,
+    },
+    {
+        path: getEditRoute(":id"),
+        component: <Edit />,
         authOnly: true,
     },
 ];

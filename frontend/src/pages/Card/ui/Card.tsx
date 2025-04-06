@@ -1,8 +1,9 @@
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { classNames } from "../../../lib/classNames/classNames";
+import { getEditRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
 
 import style from "./Card.module.scss";
@@ -70,8 +71,15 @@ const Card = () => {
                 [style.flashRed]: matchError,
             })}
         >
-            <h1>{data.theme}</h1>
-            {data.createdAt && <span>created: {format(new Date(data.createdAt), "yyyy-mm-dd")}</span>}
+            <div>
+                <h1>{data.theme}</h1>
+                {id && <Link to={getEditRoute(id)}>edit</Link>}
+            </div>
+            {data.createdAt && (
+                <span>
+                    created: {format(new Date(data.createdAt), "yyyy-mm-dd")}
+                </span>
+            )}
             <span>Author: {data.author.name}</span>
             {gameCompleted ? (
                 <div className={style.congrats}>

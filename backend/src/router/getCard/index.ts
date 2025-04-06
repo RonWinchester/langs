@@ -40,6 +40,9 @@ export const getCardTrpcRoute = trpc.procedure
             leftWords,
             rightWords,
             author: card.author,
+            description: card.description,
+            id: card.id,
+            pairs: card.pairs,
         };
     });
 
