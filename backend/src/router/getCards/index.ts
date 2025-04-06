@@ -18,5 +18,9 @@ export const getCardsTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
         },
     });
 
+    if(!cards) {
+        throw new Error("Карточки не найдены");
+    }
+
     return { cards };
 });
