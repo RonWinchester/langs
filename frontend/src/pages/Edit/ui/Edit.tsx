@@ -7,8 +7,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
+import { classNames } from "../../../lib/classNames/classNames";
 import { getCardRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
+import { WordInputForm } from "../../AddCard/ui/AddWordForm/WordInputForm";
 
 import styles from "./Edit.module.scss";
 
@@ -20,11 +22,14 @@ const EditPageComponent = ({ card }: EditPageProps) => {
     const navigate = useNavigate();
     const [submittingError, setSubmittingError] = useState<boolean>(false);
     const updateCard = trpc.updateCard.useMutation();
+    const createWords = trpc.createWord.useMutation();
+    const trpcUtils = trpc.useUtils();
+
     const formik = useFormik({
         initialValues: {
             theme: card.theme,
             description: card.description,
-            words: card.pairs,
+            words: card.pairs.map((word) => ({ ...word, deleted: false })),
         },
         validate: withZodSchema(updateCardInput.omit({ id: true })),
         onSubmit: async (values) => {
@@ -40,7 +45,41 @@ const EditPageComponent = ({ card }: EditPageProps) => {
             }
         },
     });
-    console.log(card);
+
+    const handleAddWord = async (word: {
+        original: string;
+        translation: string;
+    }) => {
+        if (!card.id) return;
+        try {
+            await createWords.mutateAsync({ ...word, cardId: card.id });
+
+            await trpcUtils.getCard.invalidate({ id: card.id });
+
+            const updated = await trpcUtils.getCard.fetch({ id: card.id });
+            if (!updated) return;
+            formik.setFieldValue(
+                "words",
+                updated.pairs.map((word) => ({ ...word, deleted: false })),
+            );
+        } catch (err) {
+            console.error("Ошибка при добавлении слова", err);
+        }
+    };
+
+    const deleteWords = (id: number) => {
+        const words = formik.values.words.map((word) => {
+            if (word.id === id) {
+                return {
+                    ...word,
+                    deleted: true,
+                };
+            } else {
+                return word;
+            }
+        });
+        formik.setFieldValue("words", words);
+    };
     return (
         <div className={styles.edit}>
             <h1>{card.theme}</h1>
@@ -60,8 +99,13 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                 <div>
                     <h2>Words</h2>
                     <div className={styles.words_container}>
-                        {card.pairs.map((pair, index) => (
-                            <div key={pair.id} className={styles.pairs}>
+                        {formik.values.words.map((pair, index) => (
+                            <div
+                                key={pair.id}
+                                className={classNames(styles.pairs, {
+                                    [styles.deleted]: pair.deleted,
+                                })}
+                            >
                                 <div>
                                     <Input<typeof formik.initialValues>
                                         label="Original"
@@ -79,13 +123,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                                     />
                                 </div>
                                 <button
-                                    // onClick={() => {
-                                    //     const newWords =
-                                    //         formik.values.words.filter(
-                                    //             (word) => word.id !== pair.id,
-                                    //         );
-                                    //     formik.setFieldValue("words", newWords);
-                                    // }}
+                                    onClick={() => deleteWords(pair.id)}
                                     type="button"
                                 >
                                     Delete
@@ -99,6 +137,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                 </button>
                 {submittingError && <div>Something went wrong</div>}
             </form>
+            <WordInputForm onAddWord={handleAddWord} />
         </div>
     );
 };
