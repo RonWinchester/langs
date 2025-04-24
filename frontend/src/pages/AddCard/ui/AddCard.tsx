@@ -1,11 +1,12 @@
 import { createCardInput } from "@langs/backend/src/router/createCard/input";
-import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { useState } from "react";
 
+import { Alert } from "../../../components/Alert";
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
 import { classNames } from "../../../lib/classNames/classNames";
+import { useForm } from "../../../lib/hooks/useForm";
 import { trpc } from "../../../lib/trpc";
 
 import style from "./AddCard.module.scss";
@@ -21,26 +22,18 @@ const AddCard = () => {
     >([]);
 
     const [success, setSuccess] = useState(false);
-    const [error, setError] = useState(false);
 
-    const formik = useFormik({
+    const {formik, buttonProps, alertProps} = useForm({
         initialValues: {
             theme: "",
             description: "",
         },
-        validate: withZodSchema(createCardInput),
+        validationSchema: createCardInput,
         onSubmit: async (values) => {
-            try {
-                const newCard = await createCard.mutateAsync(values);
-                setCardId(newCard.id);
-                setSuccess(true);
-                setTimeout(() => setSuccess(false), 2000);
-            } catch (error) {
-                setError(true);
-                setTimeout(() => {
-                    setError(false);
-                }, 2000);
-            }
+            const newCard = await createCard.mutateAsync(values);
+            setCardId(newCard.id);
+            setSuccess(true);
+            setTimeout(() => setSuccess(false), 2000);
         },
     });
 
@@ -78,9 +71,8 @@ const AddCard = () => {
                     formik={formik}
                     disabled={formik.isSubmitting}
                 />
-                {success && <div className={style.success}>Success</div>}
-                {error && <div className={style.error}>Error</div>}
-                <button type="submit" disabled={formik.isSubmitting}>
+                <Alert {...alertProps} />
+                <button type="submit" disabled={buttonProps.loading || buttonProps.disabled}>
                     Submit
                 </button>
             </form>

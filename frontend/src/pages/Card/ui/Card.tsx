@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { classNames } from "../../../lib/classNames/classNames";
+import { useAuth } from "../../../lib/context/AppContext";
 import { getEditRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
 
@@ -10,6 +11,7 @@ import style from "./Card.module.scss";
 
 const Card = () => {
     const { id } = useParams();
+    const { user } = useAuth();
     const { data, isError, isLoading } = trpc.getCard.useQuery({
         id: Number(id),
     });
@@ -73,7 +75,7 @@ const Card = () => {
         >
             <div>
                 <h1>{data.theme}</h1>
-                {id && <Link to={getEditRoute(id)}>edit</Link>}
+                {data.author.id === user?.id && id && <Link to={getEditRoute(id)}>edit</Link>}
             </div>
             {data.createdAt && (
                 <span>
@@ -90,7 +92,7 @@ const Card = () => {
                 <div className={style.wrapper}>
                     <div className={classNames(style.words, {}, [style.left])}>
                         {data.leftWords
-                            .sort((a, b) =>
+                            .sort((a) =>
                                 pairs.some((p) => p.left === a.id) ? -1 : 1,
                             )
                             .map((word) => (
@@ -118,7 +120,7 @@ const Card = () => {
                     </div>
                     <div className={classNames(style.words, {}, [style.right])}>
                         {data.rightWords
-                            .sort((a, b) =>
+                            .sort((a) =>
                                 pairs.some((p) => p.right === a.id) ? -1 : 1,
                             )
                             .map((word) => (

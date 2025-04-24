@@ -1,9 +1,9 @@
 import { createWordsInput } from "@langs/backend/src/router/createWords/input";
-import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { useState } from "react";
 
 import Input from "../../../../components/Input";
+import { useForm } from "../../../../lib/hooks/useForm";
 
 export const WordInputForm = ({
     onAddWord,
@@ -13,22 +13,18 @@ export const WordInputForm = ({
     const [word, setWord] = useState("");
     const [translation, setTranslation] = useState("");
 
-    const formik = useFormik({
+    const { formik } = useForm({
         initialValues: {
             original: "",
             translation: "",
             cardId: 0,
         },
-        validate: withZodSchema(createWordsInput),
+        validationSchema: createWordsInput,
         onSubmit: async () => {
-            try {
-                if (word && translation) {
-                    onAddWord({ original: word, translation });
-                    setWord("");
-                    setTranslation("");
-                }
-            } catch (error) {
-                console.log(error);
+            if (word && translation) {
+                onAddWord({ original: word, translation });
+                setWord("");
+                setTranslation("");
             }
         },
     });
