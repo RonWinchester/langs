@@ -1,12 +1,12 @@
 import { TrpcRouterOutput } from "@langs/backend/src/router";
 import { updateCardInput } from "@langs/backend/src/router/updateCard/validate";
-import { withZodSchema } from "formik-validator-zod";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
 import { classNames } from "../../../lib/classNames/classNames";
+import { useAuth } from "../../../lib/context/AppContext";
 import { useForm } from "../../../lib/hooks/useForm";
 import { getCardRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
@@ -64,7 +64,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
     };
 
     const deleteWords = (id: number) => {
-        if(!formik.values.words) return; 
+        if (!formik.values.words) return;
         const words = formik.values.words.map((word) => {
             if (word.id === id) {
                 return {
@@ -96,37 +96,40 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                 <div>
                     <h2>Words</h2>
                     <div className={styles.words_container}>
-                        {formik.values.words && formik.values.words.map((pair, index) => (
-                            <div
-                                key={pair.id}
-                                className={classNames(styles.pairs, {
-                                    [styles.deleted]: pair.deleted,
-                                })}
-                            >
-                                <div>
-                                    <Input<typeof formik.initialValues>
-                                        label="Original"
-                                        $name={`words[${index}].original`}
-                                        formik={formik}
-                                        disabled={formik.isSubmitting}
-                                    />
-                                </div>
-                                <div>
-                                    <Input<typeof formik.initialValues>
-                                        label="Translation"
-                                        $name={`words[${index}].translation`}
-                                        formik={formik}
-                                        disabled={formik.isSubmitting}
-                                    />
-                                </div>
-                                <button
-                                    onClick={() => pair.id && deleteWords(pair.id)}
-                                    type="button"
+                        {formik.values.words &&
+                            formik.values.words.map((pair, index) => (
+                                <div
+                                    key={pair.id}
+                                    className={classNames(styles.pairs, {
+                                        [styles.deleted]: pair.deleted,
+                                    })}
                                 >
-                                    Delete
-                                </button>
-                            </div>
-                        ))}
+                                    <div>
+                                        <Input<typeof formik.initialValues>
+                                            label="Original"
+                                            $name={`words[${index}].original`}
+                                            formik={formik}
+                                            disabled={formik.isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Input<typeof formik.initialValues>
+                                            label="Translation"
+                                            $name={`words[${index}].translation`}
+                                            formik={formik}
+                                            disabled={formik.isSubmitting}
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={() =>
+                                            pair.id && deleteWords(pair.id)
+                                        }
+                                        type="button"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            ))}
                     </div>
                 </div>
                 <button type="submit" disabled={formik.isSubmitting}>
@@ -146,13 +149,15 @@ const Edit = () => {
         id: Number(id),
     });
 
-    const user = trpc.getUser.useQuery();
+    // const user = trpc.getUser.useQuery();
 
-    if (card.isLoading || user.isLoading) {
+    const { user } = useAuth();
+
+    if (card.isLoading) {
         return <div>Loading</div>;
     }
 
-    if (card.isError || user.isError) {
+    if (card.isError) {
         return <div>Error</div>;
     }
 
@@ -160,11 +165,11 @@ const Edit = () => {
         return <div>Card Not found</div>;
     }
 
-    if (!user.data) {
+    if (!user) {
         return <div>Only auth user</div>;
     }
 
-    if (user.data.user?.id !== card.data.author.id) {
+    if (user?.id !== card.data.author.id) {
         return <div>Only author can edit</div>;
     }
 

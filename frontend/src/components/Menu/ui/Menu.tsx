@@ -19,7 +19,7 @@ const Menu = ({
     isOpen: boolean;
     toggleMenu: () => void;
 }) => {
-    const { user, isLoading, isError } = useAuth();
+    const { user } = useAuth();
 
     return (
         <aside className={classNames(style.aside, { [style.open]: isOpen })}>
@@ -27,7 +27,7 @@ const Menu = ({
                 close
             </button>
             <Link to={GET_ALL_CARDS}>На главную</Link>
-            {isLoading || isError ? null : user ? (
+            {user ? (
                 <>
                     <Link to={ADD_CARD}>Добавить карточку {user.name}</Link>
                     <Link to={SIGNOUT}>Выйти</Link>

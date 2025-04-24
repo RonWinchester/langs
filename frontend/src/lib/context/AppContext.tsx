@@ -1,41 +1,29 @@
+import { TrpcRouterOutput } from "@langs/backend/src/router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 import { trpc } from "../trpc";
 
-type User = {
-    name: string;
-    id: number;
-};
+export type AppContext = {
+    user: TrpcRouterOutput["getUser"]["user"] | null;
+}
 
-type AuthContextType = {
-    user: User | null;
-    isLoading: boolean;
-    isError: boolean;
-};
-
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AppContext>({
+    user: null
+});
 
 const AppContext = ({ children }: { children: ReactNode }) => {
-    const { data, isLoading, isError } = trpc.getUser.useQuery();
+    const { data, isLoading, isError, isFetching } = trpc.getUser.useQuery();
 
-    const [authState, setAuthState] = useState<AuthContextType>({
-        user: null,
-        isLoading: true,
-        isError: false,
-    });
+    if (isLoading || isFetching) {
+        return <div>Loading</div>;
+    }
 
-    useEffect(() => {
-        if (!isLoading) {
-            setAuthState({
-                user: data?.user || null,
-                isLoading: false,
-                isError,
-            });
-        }
-    }, [data, isLoading, isError]);
+    if (isError) {
+        return <div>Error</div>;
+    }
 
     return (
-        <AuthContext.Provider value={authState}>
+        <AuthContext.Provider value={{ user: data?.user || null }}>
             {children}
         </AuthContext.Provider>
     );

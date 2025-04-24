@@ -11,11 +11,7 @@ interface RequireAuthProps {
 
 export function RequireAuth({ children }: RequireAuthProps) {
     const location = useLocation();
-    const { user, isLoading } = useAuth();
-
-    if (isLoading) {
-        return null;
-    }
+    const { user } = useAuth();
 
     if (!user) {
         return (
