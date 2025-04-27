@@ -149,8 +149,6 @@ const Edit = () => {
         id: Number(id),
     });
 
-    // const user = trpc.getUser.useQuery();
-
     const { user } = useAuth();
 
     if (card.isLoading) {
