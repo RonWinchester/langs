@@ -1,7 +1,9 @@
+import { TrpcRouterOutput } from "@langs/backend/src/router";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import PageWrapper from "../../../components/PageWrapper";
 import { classNames } from "../../../lib/classNames/classNames";
 import { useAuth } from "../../../lib/context/AppContext";
 import { getEditRoute } from "../../../lib/router/routes";
@@ -9,12 +11,11 @@ import { trpc } from "../../../lib/trpc";
 
 import style from "./Card.module.scss";
 
-const Card = () => {
-    const { id } = useParams();
+const Card: React.FC<{
+    data: NonNullable<TrpcRouterOutput["getCard"]>;
+    id: number;
+}> = ({ data, id }) => {
     const { user } = useAuth();
-    const { data, isError, isLoading } = trpc.getCard.useQuery({
-        id: Number(id),
-    });
 
     const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
     const [selectedRight, setSelectedRight] = useState<number | null>(null);
@@ -55,10 +56,6 @@ const Card = () => {
         }
     }, [pairs, data]);
 
-    if (!data) return <div>Card not found</div>;
-    if (isError) return <div>Error</div>;
-    if (isLoading) return <div>Loading...</div>;
-
     const handleRestart = () => {
         setPairs([]);
         setSelectedLeft(null);
@@ -75,7 +72,9 @@ const Card = () => {
         >
             <div>
                 <h1>{data.theme}</h1>
-                {data.author.id === user?.id && id && <Link to={getEditRoute(id)}>edit</Link>}
+                {data.author.id === user?.id && id && (
+                    <Link to={getEditRoute(id)}>edit</Link>
+                )}
             </div>
             {data.createdAt && (
                 <span>
@@ -152,4 +151,16 @@ const Card = () => {
     );
 };
 
-export default Card;
+const WrappedCard = PageWrapper(Card);
+
+const CardView = () => {
+    const { id } = useParams();
+    return (
+        <WrappedCard
+            useQuery={() => trpc.getCard.useQuery({ id: Number(id) })}
+            id={Number(id)}
+        />
+    );
+};
+
+export default CardView;
