@@ -1,6 +1,6 @@
 import { createUserInput } from "@langs/backend/src/router/createUser/validation";
 import Cookies from "js-cookie";
-import { memo, useState } from "react";
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
@@ -20,7 +20,7 @@ const Signup = memo(({ className, ...otherProps }: SignupProps) => {
     const navigate = useNavigate();
     const createUser = trpc.createUser.useMutation();
     const trpcUtils = trpc.useUtils();
-    const {formik, buttonProps, alertProps} = useForm({
+    const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
             name: "",
             password: "",
@@ -67,7 +67,10 @@ const Signup = memo(({ className, ...otherProps }: SignupProps) => {
                     formik={formik}
                 />
                 <Alert {...alertProps} />
-                <button type="submit" disabled={buttonProps.loading || buttonProps.disabled}>
+                <button
+                    type="submit"
+                    disabled={buttonProps.loading || buttonProps.disabled}
+                >
                     Signup
                 </button>
             </form>

@@ -1,3 +1,3 @@
-import { AddCardAsync as AddCard } from "./ui/AddCard.async";
+import AddCard from "./ui/AddCard";
 
 export default AddCard;

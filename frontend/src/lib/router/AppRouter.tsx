@@ -1,14 +1,9 @@
-import { useCallback, Suspense } from "react";
+import { useCallback, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Layout } from "../../components";
-import AddCard from "../../pages/AddCard";
-import Card from "../../pages/Card";
 import Cards from "../../pages/Cards";
 import Edit from "../../pages/Edit";
-import Signin from "../../pages/SignIn";
-import Signout from "../../pages/SignOut";
-import Signup from "../../pages/SignUp";
 
 import { RequireAuth } from "./RequireAuth";
 import {
@@ -24,33 +19,33 @@ import {
 const routesConfig = [
     {
         path: GET_ALL_CARDS,
-        component: <Cards />,
+        component: lazy(() => import("../../pages/Cards")),
     },
     {
         path: ADD_CARD,
-        component: <AddCard />,
+        component: lazy(() => import("../../pages/AddCard")),
         authOnly: true,
     },
     {
         path: getCardRoute(":id"),
-        component: <Card />,
+        component: lazy(() => import("../../pages/Cards")),
     },
     {
         path: SIGNUP,
-        component: <Signup />,
+        component: lazy(() => import("../../pages/SignUp")),
     },
     {
         path: SIGNIN,
-        component: <Signin />,
+        component: lazy(() => import("../../pages/SignIn")),
     },
     {
         path: SIGNOUT,
-        component: <Signout />,
+        component: lazy(() => import("../../pages/SignOut")),
         authOnly: true,
     },
     {
         path: getEditRoute(":id"),
-        component: <Edit />,
+        component: lazy(() => import("../../pages/Edit")),
         authOnly: true,
     },
 ];
@@ -59,8 +54,11 @@ type routesConfigType = (typeof routesConfig)[number];
 
 export const AppRouter = () => {
     const renderWithWrapper = useCallback((route: routesConfigType) => {
+        const Component = route.component;
         const element = (
-            <Suspense fallback={"loading"}>{route.component}</Suspense>
+            <Suspense fallback={"loading"}>
+                <Component />
+            </Suspense>
         );
         return (
             <Route

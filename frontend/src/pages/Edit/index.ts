@@ -1,3 +1,3 @@
-import { EditPageAsync as Edit } from "./ui/Edit.async";
+import Edit from "./ui/Edit";
 
 export default Edit;

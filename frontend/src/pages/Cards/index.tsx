@@ -1,3 +1,3 @@
-import { CardsPageAsync as Cards } from "./ui/Cards.async";
+import Cards from "./ui/Cards";
 
 export default Cards;

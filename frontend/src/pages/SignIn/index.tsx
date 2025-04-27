@@ -1,3 +1,3 @@
-import { SigninPageAsync as Signin } from "./ui/Signin.async";
+import Signin from "./ui/Signin";
 
 export default Signin;

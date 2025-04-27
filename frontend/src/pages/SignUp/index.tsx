@@ -1,3 +1,3 @@
-import { SignupPageAsync as Signup } from "./ui/Signup.async";
+import SignUp from "./ui/Signup";
 
-export default Signup;
+export default SignUp;
