@@ -2,8 +2,6 @@ import { useCallback, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Layout } from "../../components";
-import Cards from "../../pages/Cards";
-import Edit from "../../pages/Edit";
 
 import { RequireAuth } from "./RequireAuth";
 import {
