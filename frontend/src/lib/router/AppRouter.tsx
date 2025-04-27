@@ -26,7 +26,7 @@ const routesConfig = [
     },
     {
         path: getCardRoute(":id"),
-        component: lazy(() => import("../../pages/Cards")),
+        component: lazy(() => import("../../pages/Card")),
     },
     {
         path: SIGNUP,

@@ -1,5 +1,4 @@
 import { createCardInput } from "@langs/backend/src/router/createCard/input";
-import { withZodSchema } from "formik-validator-zod";
 import { useState } from "react";
 
 import { Alert } from "../../../components/Alert";
@@ -21,7 +20,6 @@ const AddCard = () => {
         { original: string; translation: string }[]
     >([]);
 
-    const [success, setSuccess] = useState(false);
 
     const {formik, buttonProps, alertProps} = useForm({
         initialValues: {
@@ -32,8 +30,6 @@ const AddCard = () => {
         onSubmit: async (values) => {
             const newCard = await createCard.mutateAsync(values);
             setCardId(newCard.id);
-            setSuccess(true);
-            setTimeout(() => setSuccess(false), 2000);
         },
     });
 

@@ -3,7 +3,7 @@ import { useLocation, Navigate } from "react-router-dom";
 
 import { useAuth } from "../context/AppContext";
 
-import { GET_ALL_CARDS } from "./routes";
+import { SIGNIN } from "./routes";
 
 interface RequireAuthProps {
     children: JSX.Element;
@@ -15,7 +15,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
 
     if (!user) {
         return (
-            <Navigate to={GET_ALL_CARDS} state={{ from: location }} replace />
+            <Navigate to={SIGNIN} state={{ from: location }} replace />
         );
     }
 
