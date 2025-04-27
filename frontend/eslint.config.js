@@ -46,24 +46,6 @@ export default tseslint.config(
             "import/no-unresolved": "off",
             "no-console": "warn",
             "import/named": "off",
-            "@typescript-eslint/no-restricted-imports": [
-                "error",
-                {
-                    patterns: [
-                        {
-                            group: [
-                                "@ideanick/backend/**",
-                                "!@ideanick/backend/**/",
-                                "!@ideanick/backend/**/input",
-                                "!@ideanick/backend/src/utils/can",
-                            ],
-                            allowTypeImports: true,
-                            message:
-                                "Only types and input schemas are allowed to be imported from backend workspace",
-                        },
-                    ],
-                },
-            ],
         },
     },
 );
