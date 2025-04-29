@@ -46,6 +46,10 @@ const routesConfig = [
         component: lazy(() => import("../../pages/Edit")),
         authOnly: true,
     },
+    {
+        path: "*",
+        component: lazy(() => import("../../pages/NotFound")),
+    }
 ];
 
 type routesConfigType = (typeof routesConfig)[number];
