@@ -1,6 +1,6 @@
+import { Button, Drawer } from "@mantine/core";
 import { Link } from "react-router-dom";
 
-import { classNames } from "../../../lib/classNames/classNames";
 import { useAuth } from "../../../lib/context/AppContext";
 import {
     ADD_CARD,
@@ -22,23 +22,27 @@ const Menu = ({
     const { user } = useAuth();
 
     return (
-        <aside className={classNames(style.aside, { [style.open]: isOpen })}>
-            <button className={style.button} onClick={toggleMenu}>
-                close
-            </button>
-            <Link to={GET_ALL_CARDS}>На главную</Link>
+        <Drawer
+            opened={isOpen}
+            onClose={toggleMenu}
+            position="left"
+            classNames={{
+                body: style.menu,
+            }}
+        >
+            <Link to={GET_ALL_CARDS} onClick={toggleMenu}>На главную</Link>
             {user ? (
                 <>
-                    <Link to={ADD_CARD}>Добавить карточку {user.name}</Link>
-                    <Link to={SIGNOUT}>Выйти</Link>
+                    <Link to={ADD_CARD} onClick={toggleMenu}>Добавить карточку {user.name}</Link>
+                    <Link to={SIGNOUT} onClick={toggleMenu}>Выйти</Link>
                 </>
             ) : (
                 <>
-                    <Link to={SIGNUP}>Регистрация</Link>
-                    <Link to={SIGNIN}>Войти</Link>
+                    <Link to={SIGNUP} onClick={toggleMenu}>Регистрация</Link>
+                    <Link to={SIGNIN} onClick={toggleMenu}>Войти</Link>
                 </>
             )}
-        </aside>
+        </Drawer>
     );
 };
 

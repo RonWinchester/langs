@@ -1,10 +1,10 @@
 import { signInInput } from "@langs/backend/src/router/signIn/validation";
+import { Button, PasswordInput, TextInput } from "@mantine/core";
 import Cookies from "js-cookie";
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Alert } from "../../../components/Alert";
-import Input from "../../../components/Input";
 import { classNames } from "../../../lib/classNames/classNames";
 import { useForm } from "../../../lib/hooks/useForm";
 import { trpc } from "../../../lib/trpc";
@@ -20,7 +20,7 @@ const Signin = memo(({ className, ...otherProps }: SigninProps) => {
     const login = trpc.signIn.useMutation();
     const trpcUtils = trpc.useUtils();
 
-    const {formik, buttonProps, alertProps} = useForm({
+    const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
             name: "",
             password: "",
@@ -39,18 +39,38 @@ const Signin = memo(({ className, ...otherProps }: SigninProps) => {
             className={classNames(style.Signup, {}, [className])}
             {...otherProps}
         >
-            <h1>Signin</h1>
-            <form onSubmit={formik.handleSubmit}>
-                <Input $name={"name"} label="Name" formik={formik} />
-                <Input
-                    $name={"password"}
-                    label="Password"
-                    type="password"
-                    formik={formik}
+            <h1>Войти</h1>
+            <form onSubmit={formik.handleSubmit} className={style.form}>
+                <TextInput
+                    onChange={(e) =>
+                        formik.setFieldValue("name", e.target.value)
+                    }
+                    value={formik.values["name"] as string}
+                    onBlur={() => formik.setFieldTouched("name", true)}
+                    name={"name"}
+                    id={"name"}
+                    label="Имя"
+                    placeholder="Имя"
                 />
-                <button type="submit" disabled={buttonProps.loading || buttonProps.disabled}>
+                <PasswordInput
+                    onChange={(e) =>
+                        formik.setFieldValue("password", e.target.value)
+                    }
+                    value={formik.values["password"] as string}
+                    onBlur={() => formik.setFieldTouched("password", true)}
+                    name={"password"}
+                    id={"password"}
+                    label="Пароль"
+                    placeholder="Пароль"
+                />
+                <Button
+                    type="submit"
+                    loading={buttonProps.loading}
+                    disabled={buttonProps.disabled}
+                    fullWidth
+                >
                     Signin
-                </button>
+                </Button>
                 <Alert {...alertProps} />
             </form>
         </div>

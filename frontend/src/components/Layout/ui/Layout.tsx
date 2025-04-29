@@ -1,3 +1,4 @@
+import { Burger } from "@mantine/core";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -16,9 +17,7 @@ const Layout = () => {
     return (
         <AppContext>
             <div className={style.wrapper}>
-                <button className={style.button} onClick={toggleMenu}>
-                    menu
-                </button>
+                <Burger className={style.button} opened={isOpen} onClick={toggleMenu} />
                 <Menu isOpen={isOpen} toggleMenu={toggleMenu} />
                 <main className={style.main}>
                     <Outlet />
