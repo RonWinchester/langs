@@ -1,3 +1,4 @@
+import { Tabs } from "@mantine/core";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -22,24 +23,14 @@ const Cards = () => {
     }
     return (
         <div className={style.wrapper}>
-            {user ? <div className={style.radio}>
-                <label>
-                    <input
-                        type="radio"
-                        checked={!myCards}
-                        onChange={() => setMyCards(false)}
-                    />
-                    Все карточки
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        checked={myCards}
-                        onChange={() => setMyCards(true)}
-                    />
-                    Мои карточки
-                </label>
-            </div> : null}
+            {user ? (
+                <Tabs defaultValue="first">
+                    <Tabs.List grow justify="space-between">
+                        <Tabs.Tab value="first" onClick={() => setMyCards(false)}>Все карточки</Tabs.Tab>
+                        <Tabs.Tab value="second" onClick={() => setMyCards(true)}>Мои карточки</Tabs.Tab>
+                    </Tabs.List>
+                </Tabs>
+            ) : null}
             <div className={style.cards}>
                 {!myCards
                     ? data.cards.map((card) => (

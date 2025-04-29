@@ -69,7 +69,7 @@ const Signin = memo(({ className, ...otherProps }: SigninProps) => {
                     disabled={buttonProps.disabled}
                     fullWidth
                 >
-                    Signin
+                    Войти
                 </Button>
                 <Alert {...alertProps} />
             </form>

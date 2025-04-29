@@ -1,4 +1,4 @@
-import { Button, Drawer } from "@mantine/core";
+import { Drawer } from "@mantine/core";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../lib/context/AppContext";
