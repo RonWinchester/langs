@@ -1,4 +1,5 @@
 import { createUserInput } from "@langs/backend/src/router/createUser/validation";
+import { Button, PasswordInput, TextInput } from "@mantine/core";
 import Cookies from "js-cookie";
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -51,28 +52,52 @@ const Signup = memo(({ className, ...otherProps }: SignupProps) => {
             className={classNames(style.Signup, {}, [className])}
             {...otherProps}
         >
-            <h1>Signup</h1>
-            <form onSubmit={formik.handleSubmit}>
-                <Input $name={"name"} label="Name" formik={formik} />
-                <Input
-                    $name={"password"}
-                    label="Password"
-                    type="password"
-                    formik={formik}
+            <h1>Зарегистрироваться</h1>
+            <form onSubmit={formik.handleSubmit} className={style.form}>
+                <TextInput
+                    onChange={(e) =>
+                        formik.setFieldValue("name", e.target.value)
+                    }
+                    value={formik.values["name"] as string}
+                    onBlur={() => formik.setFieldTouched("name", true)}
+                    name={"name"}
+                    id={"name"}
+                    label="Имя"
+                    placeholder="Имя"
                 />
-                <Input
-                    $name={"passwordRepeat"}
+                <PasswordInput
+                    onChange={(e) =>
+                        formik.setFieldValue("password", e.target.value)
+                    }
+                    value={formik.values["password"] as string}
+                    onBlur={() => formik.setFieldTouched("password", true)}
+                    name={"password"}
+                    id={"password"}
+                    label="Пароль"
+                    placeholder="Пароль"
+                />
+                <PasswordInput
+                    onChange={(e) =>
+                        formik.setFieldValue("passwordRepeat", e.target.value)
+                    }
+                    value={formik.values["passwordRepeat"] as string}
+                    onBlur={() =>
+                        formik.setFieldTouched("passwordRepeat", true)
+                    }
+                    name={"passwordRepeat"}
+                    id={"passwordRepeat"}
                     label="Repeat password"
-                    type="password"
-                    formik={formik}
+                    placeholder="Repeat password"
                 />
-                <Alert {...alertProps} />
-                <button
+                <Button
                     type="submit"
-                    disabled={buttonProps.loading || buttonProps.disabled}
+                    loading={buttonProps.loading}
+                    disabled={buttonProps.disabled}
+                    fullWidth
                 >
-                    Signup
-                </button>
+                    Зарегистрироваться
+                </Button>
+                <Alert {...alertProps} />
             </form>
         </div>
     );
