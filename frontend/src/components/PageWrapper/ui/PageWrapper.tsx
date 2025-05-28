@@ -16,14 +16,14 @@ export function PageWrapper<
     const PageWrapperComponent: React.FC<
         PageWrapperProps<TData, TError> & Omit<P, "data">
     > = ({ useQuery, ...restProps }) => {
-        const { data, isLoading, isError, error } = useQuery();
+        const { data, isLoading, isError, error, refetch } = useQuery();
 
         if (isLoading) return <div>Loading...</div>;
         if (isError && error instanceof Error)
             return <div>{error.message}</div>;
         if (!data) return <div>Card not found</div>;
 
-        return <WrappedComponent {...({ ...restProps, data } as unknown as P)} />;
+        return <WrappedComponent {...({ ...restProps, data, refetch } as unknown as P)} />;
     };
 
     return PageWrapperComponent;

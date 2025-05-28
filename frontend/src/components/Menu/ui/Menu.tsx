@@ -1,6 +1,6 @@
+import { Home, LogInIcon, LogOut, Plus, UserRoundPlus, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { classNames } from "../../../lib/classNames/classNames";
 import { useAuth } from "../../../lib/context/AppContext";
 import {
     ADD_CARD,
@@ -10,7 +10,28 @@ import {
     SIGNUP,
 } from "../../../lib/router/routes";
 
-import style from "./Menu.module.scss";
+const NavItem = ({
+    to,
+    icon,
+    text,
+    toggleMenu,
+}: {
+    to: string;
+    icon: React.ReactNode;
+    text: string;
+    toggleMenu?: () => void;
+}) => (
+    <Link
+        to={to}
+        className={`flex items-center p-4 hover:bg-blue-50 transition-colors ${
+            location.pathname === to ? "bg-blue-100 text-blue-800" : ""
+        }`}
+        onClick={toggleMenu}
+    >
+        <span className="mr-3">{icon}</span>
+        <span>{text}</span>
+    </Link>
+);
 
 const Menu = ({
     isOpen,
@@ -22,23 +43,69 @@ const Menu = ({
     const { user } = useAuth();
 
     return (
-        <aside className={classNames(style.aside, { [style.open]: isOpen })}>
-            <button className={style.button} onClick={toggleMenu}>
-                close
-            </button>
-            <Link to={GET_ALL_CARDS}>На главную</Link>
-            {user ? (
-                <>
-                    <Link to={ADD_CARD}>Добавить карточку {user.name}</Link>
-                    <Link to={SIGNOUT}>Выйти</Link>
-                </>
-            ) : (
-                <>
-                    <Link to={SIGNUP}>Регистрация</Link>
-                    <Link to={SIGNIN}>Войти</Link>
-                </>
+        <>
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-opacity-50 z-20 backdrop-blur-md"
+                    onClick={toggleMenu}
+                ></div>
             )}
-        </aside>
+
+            <aside
+                className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white z-30 transform transition-transform duration-300 ease-in-out ${
+                    isOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+            >
+                <div className="flex justify-between items-center p-3 border-b">
+                    <h2 className="text-xl font-semibold">Меню</h2>
+                    <button
+                        onClick={toggleMenu}
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                        aria-label="Close menu"
+                    >
+                        <X size={24} />
+                    </button>
+                </div>
+                <nav className="flex flex-col">
+                    <NavItem
+                        to={GET_ALL_CARDS}
+                        icon={<Home size={20} />}
+                        text="Главная"
+                        toggleMenu={toggleMenu}
+                    />
+                    {user ? (
+                        <>
+                            <NavItem
+                                to={ADD_CARD}
+                                text="Добавить карточку"
+                                icon={<Plus size={20} />}
+                                toggleMenu={toggleMenu}
+                            />
+                            <NavItem
+                                to={SIGNOUT}
+                                text="Выйти"
+                                icon={<LogOut size={20} />}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <NavItem
+                                to={SIGNUP}
+                                text="Регистрация"
+                                icon={<UserRoundPlus size={20} />}
+                                toggleMenu={toggleMenu}
+                            />
+                            <NavItem
+                                to={SIGNIN}
+                                text="Войти"
+                                icon={<LogInIcon size={20} />}
+                                toggleMenu={toggleMenu}
+                            />
+                        </>
+                    )}
+                </nav>
+            </aside>
+        </>
     );
 };
 

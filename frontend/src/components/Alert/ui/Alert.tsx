@@ -16,9 +16,7 @@ export const Alert = memo(
         if (hidden) return null;
         return (
             <div
-                className={classNames(style.alert, {
-                    [style[color]]: true,
-                }, [className])}
+                className="bg-red-50 text-red-700 p-3 rounded-lg mt-2"
                 {...otherProps}
             >
                 {children}

@@ -43,8 +43,8 @@ const Input = <T,>({
 
 
     return (
-        <div className={classNames(style.container)}>
-            <label htmlFor={$name as string}>{label}</label>
+        <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor={$name as string}>{label}</label>
             <input
                 type={type}
                 onChange={(e) =>
@@ -54,6 +54,7 @@ const Input = <T,>({
                 onBlur={() => formik.setFieldTouched($name as string, true)}
                 name={$name as string}
                 id={$name as string}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 {...props}
             />
             {touched && error && <div className={style.error}>{error}</div>}

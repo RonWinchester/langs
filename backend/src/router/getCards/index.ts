@@ -7,18 +7,19 @@ export const getCardsTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
         select: {
             id: true,
             theme: true,
+            description: true,
             author: {
                 select: {
                     id: true,
                 },
-            }
+            },
         },
         orderBy: {
             createdAt: "desc",
         },
     });
 
-    if(!cards) {
+    if (!cards) {
         throw new Error("Карточки не найдены");
     }
 

@@ -14,6 +14,7 @@
     },
     "dependencies": {
         "@langs/backend": "workspace:*",
+        "@tailwindcss/vite": "^4.1.8",
         "@tanstack/react-query": "^4.32.6",
         "@trpc/client": "^10.45.2",
         "@trpc/react-query": "^10.45.2",
@@ -22,10 +23,12 @@
         "formik-validator-zod": "^1.0.2",
         "js-cookie": "^3.0.5",
         "lodash": "^4.17.21",
+        "lucide-react": "^0.511.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.15.0",
         "sass": "^1.85.0",
+        "tailwindcss": "^4.1.8",
         "zod": "^3.22.2"
     },
     "devDependencies": {
