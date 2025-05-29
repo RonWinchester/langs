@@ -7,8 +7,6 @@ import { useAuth } from "../../../lib/context/AppContext";
 import { getCardRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
 
-import style from "./Cards.module.scss";
-
 interface CardProps {
     card: TrpcRouterOutput["getCards"]["cards"][number];
 }

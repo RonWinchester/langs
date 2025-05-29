@@ -1,9 +1,5 @@
 import { memo } from "react";
 
-import { classNames } from "../../../lib/classNames/classNames";
-
-import style from "./Alert.module.scss";
-
 export interface AlertProps {
     color: "red" | "green";
     className?: string;
@@ -16,7 +12,12 @@ export const Alert = memo(
         if (hidden) return null;
         return (
             <div
-                className="bg-red-50 text-red-700 p-3 rounded-lg mt-2"
+                className={
+                    "p-3 rounded-lg mt-2" + " " + className + " " + color ===
+                    "red"
+                        ? "bg-red-50 text-red-700"
+                        : "bg-green-50 text-green-700"
+                }
                 {...otherProps}
             >
                 {children}
