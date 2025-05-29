@@ -1,5 +1,4 @@
 import { createWordsInput } from "@langs/backend/src/router/createWords/input";
-import { withZodSchema } from "formik-validator-zod";
 import { useState } from "react";
 
 import Input from "../../../../components/Input";
@@ -35,6 +34,7 @@ export const WordInputForm = ({
                 e.preventDefault();
                 formik.handleSubmit();
             }}
+            className="p-4"
         >
             <Input
                 label="Слово"
