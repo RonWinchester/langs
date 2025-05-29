@@ -178,7 +178,6 @@ const Card: React.FC<{
                             ))}
                     </div>
                 </div>
-
                 <div className="flex-1">
                     <h3 className="text-sm font-medium text-gray-500 mb-2">
                         Русский:
@@ -217,7 +216,6 @@ const Card: React.FC<{
                     </div>
                 </div>
             </div>
-
             <div className="mt-8 text-center text-sm text-gray-600">
                 Выберите слово на английском, затем соответствующее слово на
                 русском

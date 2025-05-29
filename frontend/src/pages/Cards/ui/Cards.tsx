@@ -78,23 +78,27 @@ const Cards = () => {
                 Доступные наборы слов
             </h2>
             {user ? (
-                <div className={style.radio}>
-                    <label>
-                        <input
-                            type="radio"
-                            checked={!myCards}
-                            onChange={() => setMyCards(false)}
-                        />
+                <div className="flex bg-gray-100 p-1 rounded-lg mb-4">
+                    <button
+                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                            !myCards
+                                ? "bg-white text-blue-600 shadow-sm"
+                                : "text-gray-600 hover:text-gray-900"
+                        }`}
+                        onClick={() => setMyCards(false)}
+                    >
                         Все карточки
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            checked={myCards}
-                            onChange={() => setMyCards(true)}
-                        />
+                    </button>
+                    <button
+                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                            myCards
+                                ? "bg-white text-blue-600 shadow-sm"
+                                : "text-gray-600 hover:text-gray-900"
+                        }`}
+                        onClick={() => setMyCards(true)}
+                    >
                         Мои карточки
-                    </label>
+                    </button>
                 </div>
             ) : null}
             <div className="space-y-4">
