@@ -47,7 +47,7 @@ const Card: React.FC<{
     }, [selectedLeft, selectedRight]);
 
     useEffect(() => {
-        if (data && pairs.length === data.leftWords.length) {
+        if (data && pairs.length === data.original.length) {
             setGameCompleted(true);
         }
     }, [pairs, data]);
@@ -146,7 +146,7 @@ const Card: React.FC<{
                         Английский:
                     </h3>
                     <div className="space-y-2">
-                        {data.leftWords
+                        {data.original
                             .sort((a) =>
                                 pairs.some((p) => p.left === a.id) ? -1 : 1,
                             )
@@ -183,7 +183,7 @@ const Card: React.FC<{
                         Русский:
                     </h3>
                     <div className="space-y-2">
-                        {data.rightWords
+                        {data.translation
                             .sort((a) =>
                                 pairs.some((p) => p.right === a.id) ? -1 : 1,
                             )

@@ -1,16 +1,17 @@
 import { TrpcRouterOutput } from "@langs/backend/src/router";
 import { updateCardInput } from "@langs/backend/src/router/updateCard/validate";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { Alert } from "../../../components/Alert";
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
-import { classNames } from "../../../lib/classNames/classNames";
+import { WordPairFormElemen } from "../../../components/WordPairFormElemen";
 import { useAuth } from "../../../lib/context/AppContext";
 import { useForm } from "../../../lib/hooks/useForm";
 import { getCardRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
-import { WordInputForm } from "../../AddCard/ui/AddWordForm/WordInputForm";
 
 import styles from "./Edit.module.scss";
 
@@ -20,124 +21,120 @@ interface EditPageProps {
 
 const EditPageComponent = ({ card }: EditPageProps) => {
     const navigate = useNavigate();
-    const [submittingError, setSubmittingError] = useState<boolean>(false);
+    const [words, setWords] = useState<
+        {
+            original: string;
+            translation: string;
+            deleted?: boolean;
+            id?: number;
+        }[]
+    >(
+        card.pairs.map(({ id, original, translation }) => ({
+            original,
+            translation,
+            id,
+            deleted: false,
+    })));
     const updateCard = trpc.updateCard.useMutation();
-    const createWords = trpc.createWord.useMutation();
-    const trpcUtils = trpc.useUtils();
 
-    const { formik } = useForm({
+    const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
             theme: card.theme,
             description: card.description,
-            words: card.pairs.map((word) => ({ ...word, deleted: false })),
+            pairs: words,
         },
         validationSchema: updateCardInput.omit({ id: true }),
         onSubmit: async (values) => {
-            setSubmittingError(false);
             await updateCard.mutateAsync({
                 ...values,
+                pairs: [...words],
                 id: card.id,
             });
             navigate(getCardRoute(card.id));
         },
     });
 
-    const handleAddWord = async (word: {
-        original: string;
-        translation: string;
-    }) => {
-        if (!card.id) return;
-        try {
-            await createWords.mutateAsync({ ...word, cardId: card.id });
-
-            await trpcUtils.getCard.invalidate({ id: card.id });
-
-            const updated = await trpcUtils.getCard.fetch({ id: card.id });
-            if (!updated) return;
-            formik.setFieldValue(
-                "words",
-                updated.pairs.map((word) => ({ ...word, deleted: false })),
-            );
-        } catch (err) {
-            console.error("Ошибка при добавлении слова", err);
-        }
+    const handleAddWordPair = () => {
+        setWords([...words, { original: "", translation: "", deleted: false }]);
     };
 
-    const deleteWords = (id: number) => {
-        if (!formik.values.words) return;
-        const words = formik.values.words.map((word) => {
-            if (word.id === id) {
-                return {
-                    ...word,
-                    deleted: true,
-                };
-            } else {
-                return word;
-            }
-        });
-        formik.setFieldValue("words", words);
-    };
     return (
         <div className={styles.edit}>
-            <h1>{card.theme}</h1>
+            <h2 className="text-xl font-semibold mb-6">{card.theme}</h2>
+            <Alert {...alertProps} />
             <form onSubmit={formik.handleSubmit}>
-                <Input<typeof formik.initialValues>
-                    label="Theme"
-                    $name="theme"
-                    formik={formik}
-                    disabled={formik.isSubmitting}
-                />
-                <Textarea<typeof formik.initialValues>
-                    label="Description"
-                    $name="description"
-                    formik={formik}
-                    disabled={formik.isSubmitting}
-                />
-                <div>
-                    <h2>Words</h2>
-                    <div className={styles.words_container}>
-                        {formik.values.words &&
-                            formik.values.words.map((pair, index) => (
-                                <div
-                                    key={pair.id}
-                                    className={classNames(styles.pairs, {
-                                        [styles.deleted]: pair.deleted,
-                                    })}
-                                >
-                                    <div>
-                                        <Input<typeof formik.initialValues>
-                                            label="Original"
-                                            $name={`words[${index}].original`}
-                                            formik={formik}
-                                            disabled={formik.isSubmitting}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Input<typeof formik.initialValues>
-                                            label="Translation"
-                                            $name={`words[${index}].translation`}
-                                            formik={formik}
-                                            disabled={formik.isSubmitting}
-                                        />
-                                    </div>
-                                    <button
-                                        onClick={() =>
-                                            pair.id && deleteWords(pair.id)
-                                        }
-                                        type="button"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            ))}
+                <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div className="p-4">
+                        <Input<typeof formik.initialValues>
+                            label="Тема"
+                            $name="theme"
+                            formik={formik}
+                            disabled={formik.isSubmitting}
+                            placeholder="Например: Начальный уровень"
+                        />
+                        <Textarea<typeof formik.initialValues>
+                            label="Описание"
+                            $name="description"
+                            formik={formik}
+                            disabled={formik.isSubmitting}
+                            placeholder="Кратко опишите набор слов"
+                        />
                     </div>
                 </div>
-                <button type="submit" disabled={formik.isSubmitting}>
-                    Submit
-                </button>
-                {submittingError && <div>Something went wrong</div>}
+                <div>
+                    <h3 className="text-lg font-medium mb-3">Пары слов</h3>
+                    <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div className="p-4">
+                            {words.map((pair, index) => {
+                                if (pair.deleted) return null;
+                                return (
+                                    <WordPairFormElemen
+                                        key={index}
+                                        index={index}
+                                        pair={pair}
+                                        words={words}
+                                        setWords={setWords}
+                                        handleDelete
+                                    />
+                                );
+                            })}
+
+                            <button
+                                type="button"
+                                onClick={handleAddWordPair}
+                                className="flex items-center justify-center w-full py-2 mt-2 text-blue-600 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+                            >
+                                <Plus size={20} className="mr-1" />
+                                <span>Добавить пару слов</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex space-x-4">
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
+                        Отмена
+                    </button>
+                    <button
+                        type="submit"
+                        className={
+                            "flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors" +
+                            " " +
+                            (buttonProps.disabled || buttonProps.loading
+                                ? "opacity-50 cursor-not-allowed"
+                                : "")
+                        }
+                        disabled={buttonProps.disabled}
+                    >
+                        {buttonProps.loading
+                            ? "Сохранение..."
+                            : "Редактировать"}
+                    </button>
+                </div>
             </form>
-            <WordInputForm onAddWord={handleAddWord} />
         </div>
     );
 };

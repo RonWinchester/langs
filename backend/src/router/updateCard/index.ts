@@ -5,7 +5,8 @@ import { updateCardInput } from "./validate";
 export const updateCardTrpcRoute = trpc.procedure
     .input(updateCardInput)
     .mutation(async ({ ctx, input }) => {
-        const { id, words, ...cardInput } = input;
+        const { id, ...cardInput } = input;
+        const { theme, description, pairs } = cardInput;
 
         if (!ctx.user) {
             throw new Error("Вы не авторизованы");
@@ -35,30 +36,29 @@ export const updateCardTrpcRoute = trpc.procedure
 
         const updatedCard = await ctx.prisma.cards.update({
             where: { id },
-            data: cardInput,
+            data: { theme, description },
         });
 
-        // **Обрабатываем слова**
-        if (words) {
-            for (const word of words) {
-                if (word.deleted) {
+        if (pairs) {
+            for (const pair of pairs) {
+                if (pair.deleted && pair.id) {
                     await ctx.prisma.word.deleteMany({
-                        where: { id: word.id, cardId: id },
+                        where: { id: pair.id, cardId: id },
                     });
-                } else if (word.id) {
+                } else if (pair.id) {
                     await ctx.prisma.word.update({
-                        where: { id: word.id, cardId: id },
+                        where: { id: pair.id, cardId: id },
                         data: {
-                            original: word.original,
-                            translation: word.translation,
+                            original: pair.original,
+                            translation: pair.translation,
                         },
                     });
                 } else {
                     await ctx.prisma.word.create({
                         data: {
                             cardId: id,
-                            original: word.original,
-                            translation: word.translation,
+                            original: pair.original,
+                            translation: pair.translation,
                         },
                     });
                 }

@@ -1,14 +1,15 @@
 import { z } from "zod";
 
 import { createCardInput } from "../createCard/input";
-import { createWordsInput } from "../createWords/input";
 
-const updateWordsInput = createWordsInput.extend({
+const updateWordsInput = z.object({
     id: z.number().optional(),
     deleted: z.boolean().optional(),
-}).omit({ cardId: true });
+    original: z.string(),
+    translation: z.string(),
+})
 
 export const updateCardInput = createCardInput.extend({
     id: z.number(),
-    words: z.array(updateWordsInput).optional(),
+    pairs: z.array(updateWordsInput).optional(),
 });

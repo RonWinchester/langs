@@ -26,19 +26,19 @@ export const getCardTrpcRoute = trpc.procedure
             });
         }
 
-        const leftWords = card.pairs.map((word) => ({
+        const original = card.pairs.map((word) => ({
             id: word.id,
             text: word.original,
         }));
-        const rightWords = shuffleArray(
+        const translation = shuffleArray(
             card.pairs.map((word) => ({ id: word.id, text: word.translation })),
         );
 
         return {
             theme: card.theme,
             createdAt: card.createdAt,
-            leftWords,
-            rightWords,
+            original,
+            translation,
             author: card.author,
             description: card.description,
             id: card.id,
