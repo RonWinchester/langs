@@ -37,6 +37,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
         })),
     );
     const updateCard = trpc.updateCard.useMutation();
+    const deleteCard = trpc.deleteCard.useMutation();
 
     const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
@@ -58,6 +59,15 @@ const EditPageComponent = ({ card }: EditPageProps) => {
 
     const handleAddWordPair = () => {
         setWords([...words, { original: "", translation: "", deleted: false }]);
+    };
+
+    const handleDeleteCard = async () => {
+        if (confirm("Вы действительно хотите удалить карточку?")) {
+            await deleteCard.mutateAsync({
+                id: card.id,
+            });
+            navigate("/");
+        }
     };
 
     return (
@@ -143,6 +153,13 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                             : "Редактировать"}
                     </button>
                 </div>
+                <button
+                    type="button"
+                    onClick={handleDeleteCard}
+                    className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-300 transition-colors mt-4"
+                >
+                    Удалить
+                </button>
             </form>
         </div>
     );
