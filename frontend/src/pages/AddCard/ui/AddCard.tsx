@@ -21,6 +21,7 @@ const AddCard = () => {
 
     const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
+            title: "",
             theme: "",
             description: "",
         },
@@ -51,6 +52,13 @@ const AddCard = () => {
 
             <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
                 <div className="p-4">
+                    <Input<typeof formik.initialValues>
+                        label="Название"
+                        $name="title"
+                        formik={formik}
+                        disabled={formik.isSubmitting}
+                        placeholder="Например: Цвета"
+                    />
                     <Input<typeof formik.initialValues>
                         label="Тема"
                         $name="theme"

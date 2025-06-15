@@ -86,7 +86,7 @@ const Card: React.FC<{
                 </div>
                 <h2 className="text-2xl font-bold mb-2">Поздравляем!</h2>
                 <p className="text-lg mb-6">
-                    Вы успешно завершили игру "{data.theme}"
+                    Вы успешно завершили игру "{data.title}"
                 </p>
                 <div className="space-y-4">
                     <button
@@ -117,7 +117,7 @@ const Card: React.FC<{
                 </button>
                 <div className="flex-1">
                     <div className="flex items-center gap-2">
-                        <h2 className="text-xl font-semibold">{data.theme}</h2>
+                        <h2 className="text-xl font-semibold">{data.title}</h2>
                         {data.author.id === user?.id && id && (
                             <Link
                                 to={getEditRoute(id)}

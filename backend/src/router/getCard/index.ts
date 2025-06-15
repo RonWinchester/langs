@@ -36,6 +36,7 @@ export const getCardTrpcRoute = trpc.procedure
 
         return {
             theme: card.theme,
+            title: card.title,
             createdAt: card.createdAt,
             original,
             translation,

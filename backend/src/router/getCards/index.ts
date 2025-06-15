@@ -7,6 +7,7 @@ export const getCardsTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
         select: {
             id: true,
             theme: true,
+            title: true,
             description: true,
             author: {
                 select: {

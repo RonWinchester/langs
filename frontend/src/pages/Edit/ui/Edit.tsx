@@ -34,11 +34,13 @@ const EditPageComponent = ({ card }: EditPageProps) => {
             translation,
             id,
             deleted: false,
-    })));
+        })),
+    );
     const updateCard = trpc.updateCard.useMutation();
 
     const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
+            title: card.title,
             theme: card.theme,
             description: card.description,
             pairs: words,
@@ -60,11 +62,18 @@ const EditPageComponent = ({ card }: EditPageProps) => {
 
     return (
         <div className={styles.edit}>
-            <h2 className="text-xl font-semibold mb-6">{card.theme}</h2>
+            <h2 className="text-xl font-semibold mb-6">{card.title}</h2>
             <Alert {...alertProps} />
             <form onSubmit={formik.handleSubmit}>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
                     <div className="p-4">
+                        <Input<typeof formik.initialValues>
+                            label="Название"
+                            $name="title"
+                            formik={formik}
+                            disabled={formik.isSubmitting}
+                            placeholder="Например: Цвета"
+                        />
                         <Input<typeof formik.initialValues>
                             label="Тема"
                             $name="theme"

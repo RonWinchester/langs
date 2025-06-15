@@ -10,6 +10,7 @@ datasource db {
 model Cards {
     id          Int      @id @default(autoincrement())
     theme       String   @unique
+    title       String   @unique
     description String
     createdAt   DateTime @default(now())
     authorId    Int

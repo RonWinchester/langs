@@ -1,7 +1,5 @@
 import { FormikProps } from "formik";
 
-import { classNames } from "../../../lib/classNames/classNames";
-
 import style from "./Input.module.scss";
 
 interface InputProps<T> extends React.InputHTMLAttributes<HTMLInputElement> {

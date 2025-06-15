@@ -29,11 +29,11 @@ const Card: React.FC<CardProps> = ({ card }) => {
                 <div className="p-4">
                     <div className="flex justify-between items-start">
                         <div>
-                            {/* <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full mb-2">
-                                {card.theme} тег
-                            </span> */}
-                            <h3 className="text-lg font-semibold">
+                            <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full mb-2">
                                 {card.theme}
+                            </span>
+                            <h3 className="text-lg font-semibold">
+                                {card.title}
                             </h3>
                             <p className="text-gray-600 text-sm mt-1">
                                 {card.description}
