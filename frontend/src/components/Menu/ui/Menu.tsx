@@ -1,4 +1,12 @@
-import { Home, LogInIcon, LogOut, Plus, UserRoundPlus, X } from "lucide-react";
+import {
+    Home,
+    LogInIcon,
+    LogOut,
+    Plus,
+    User,
+    UserRoundPlus,
+    X,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../lib/context/AppContext";
@@ -8,6 +16,7 @@ import {
     SIGNIN,
     SIGNOUT,
     SIGNUP,
+    PROFILE,
 } from "../../../lib/router/routes";
 
 const NavItem = ({
@@ -79,6 +88,12 @@ const Menu = ({
                                 to={ADD_CARD}
                                 text="Добавить карточку"
                                 icon={<Plus size={20} />}
+                                toggleMenu={toggleMenu}
+                            />
+                            <NavItem
+                                to={PROFILE}
+                                text="Профиль"
+                                icon={<User size={20} />}
                                 toggleMenu={toggleMenu}
                             />
                             <NavItem

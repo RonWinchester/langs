@@ -12,6 +12,7 @@ import {
     SIGNIN,
     SIGNOUT,
     getEditRoute,
+    PROFILE,
 } from "./routes";
 
 const routesConfig = [
@@ -44,6 +45,11 @@ const routesConfig = [
     {
         path: getEditRoute(":id"),
         component: lazy(() => import("../../pages/Edit")),
+        authOnly: true,
+    },
+    {
+        path: PROFILE,
+        component: lazy(() => import("../../pages/Profile")),
         authOnly: true,
     },
     {
