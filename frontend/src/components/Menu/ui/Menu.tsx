@@ -92,7 +92,7 @@ const Menu = ({
                             />
                             <NavItem
                                 to={PROFILE}
-                                text="Профиль"
+                                text={`Профиль (${user.name})`}
                                 icon={<User size={20} />}
                                 toggleMenu={toggleMenu}
                             />

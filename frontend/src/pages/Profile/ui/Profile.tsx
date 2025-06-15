@@ -1,7 +1,7 @@
-import { updateUserInput } from "@langs/backend/src/router/updateUser/validation";
 import { ArrowLeft } from "lucide-react";
 import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 import { Alert } from "../../../components/Alert";
 import Input from "../../../components/Input";
@@ -13,6 +13,7 @@ const Profile = memo(() => {
     const navigate = useNavigate();
     const updateUser = trpc.updateUser.useMutation();
     const { user } = useAuth();
+    const trpcUtils = trpc.useUtils();
 
     const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
@@ -20,9 +21,49 @@ const Profile = memo(() => {
             currentPassword: "",
             newPassword: "",
         },
-        validationSchema: updateUserInput,
+        validationSchema: z.object({
+            name: z.string().min(2, "Имя должно содержать минимум 2 символа"),
+            currentPassword: z.string().optional(),
+            newPassword: z.string().optional(),
+        }).superRefine((data, ctx) => {
+            // Если указан текущий пароль, то новый пароль обязателен
+            if (data.currentPassword && !data.newPassword) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "При указании текущего пароля необходимо указать новый пароль",
+                    path: ["newPassword"],
+                });
+            }
+
+            // Если указан текущий пароль, он должен быть не менее 5 символов
+            if (data.currentPassword && data.currentPassword.length < 5) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Пароль должен содержать минимум 5 символов",
+                    path: ["currentPassword"],
+                });
+            }
+
+            // Если указан новый пароль, он должен быть не менее 5 символов
+            if (data.newPassword && data.newPassword.length < 5) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Пароль должен содержать минимум 5 символов",
+                    path: ["newPassword"],
+                });
+            }
+        }),
         onSubmit: async (values) => {
-            await updateUser.mutateAsync(values);
+            const dataToSubmit = {
+                name: values.name,
+                ...(values.currentPassword && {
+                    currentPassword: values.currentPassword,
+                }),
+                ...(values.newPassword && { newPassword: values.newPassword }),
+            };
+
+            await updateUser.mutateAsync(dataToSubmit);
+            await trpcUtils.getUser.invalidate();
             navigate("/");
         },
     });
@@ -73,7 +114,7 @@ const Profile = memo(() => {
                             disabled={formik.isSubmitting}
                         />
                         <Input<typeof formik.initialValues>
-                            label="Новый пароль (необязательно)"
+                            label="Новый пароль"
                             $name="newPassword"
                             type="password"
                             formik={formik}

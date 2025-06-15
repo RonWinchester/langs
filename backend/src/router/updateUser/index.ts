@@ -10,20 +10,22 @@ export const updateUserTrpcRoute = trpc.procedure
             throw new Error("Вы не авторизованы");
         }
 
-        // Проверяем текущий пароль
-        const user = await ctx.prisma.user.findFirst({
-            where: {
-                id: ctx.user.id,
-                password: getPassword(input.currentPassword),
-            },
-        });
+        // Проверяем текущий пароль только если он предоставлен
+        if (input.currentPassword) {
+            const user = await ctx.prisma.user.findFirst({
+                where: {
+                    id: ctx.user.id,
+                    password: getPassword(input.currentPassword),
+                },
+            });
 
-        if (!user) {
-            throw new Error("Неверный текущий пароль");
+            if (!user) {
+                throw new Error("Неверный текущий пароль");
+            }
         }
 
         // Проверяем, не занято ли новое имя пользователя
-        if (input.name !== user.name) {
+        if (input.name !== ctx.user.name) {
             const existingUser = await ctx.prisma.user.findUnique({
                 where: {
                     name: input.name,
@@ -54,4 +56,4 @@ export const updateUserTrpcRoute = trpc.procedure
                 name: updatedUser.name,
             },
         };
-    }); 
+    });
