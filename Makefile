@@ -19,6 +19,9 @@ frontend/node_modules:
 prisma/migrate:
 	@docker exec -it langs-backend-1 pnpm pmd $(DESCRIPTION)
 
+prisma/migrate-deploy:
+	@docker exec -it langs-backend-1 pnpm pmdeploy
+
 # make prisma/migrate DESCRIPTION="create_users_table"
 
 prisma/generate:

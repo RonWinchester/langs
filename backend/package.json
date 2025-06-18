@@ -12,6 +12,7 @@
         "format": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
         "pmd": "prisma migrate dev",
         "pgc": "prisma generate",
+        "pmdeploy": "prisma migrate deploy",
         "prepare": "pnpm pgc"
     },
     "prisma": {
