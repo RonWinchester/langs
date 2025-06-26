@@ -1,9 +1,10 @@
 import { TrpcRouterOutput } from "@langs/backend/src/router";
 import { ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../lib/context/AppContext";
+import { useInfiniteScroll } from "../../../lib/hooks/useInfiniteScroll";
 import { getCardRoute } from "../../../lib/router/routes";
 import { trpc } from "../../../lib/trpc";
 
@@ -71,6 +72,13 @@ const Cards = () => {
     const { user } = useAuth();
 
     const [myCards, setMyCards] = useState(false);
+    const triggerRef = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
+
+    useInfiniteScroll({
+        onScrollEnd: isFetchingNextPage ? undefined : fetchNextPage,
+        triggerRef: hasNextPage ? triggerRef : null,
+        wrapperRef: undefined,
+    });
 
     if (isError) {
         return <div>Error</div>;
@@ -127,14 +135,12 @@ const Cards = () => {
                               }
                           }),
                       )}
-                {hasNextPage && (
-                    <button
-                        onClick={() => fetchNextPage()}
-                        disabled={isFetchingNextPage}
-                    >
-                        {isFetchingNextPage ? "Загрузка..." : "Загрузить ещё"}
-                    </button>
-                )}
+                      <div ref={triggerRef} className="h-0"></div>
+                      {isFetchingNextPage ? (
+                          <div className="flex justify-center">
+                              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                          </div>
+                      ) : null}
             </div>
         </div>
     );
