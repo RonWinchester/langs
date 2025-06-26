@@ -53,7 +53,21 @@ const Card: React.FC<CardProps> = ({ card }) => {
 };
 
 const Cards = () => {
-    const { data, isError, isLoading } = trpc.getCards.useQuery();
+    const {
+        data,
+        isError,
+        isLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = trpc.getCards.useInfiniteQuery(
+        {
+            limit: 2,
+        },
+        {
+            getNextPageParam: (lastPage) => lastPage.nextCursor,
+        },
+    );
     const { user } = useAuth();
 
     const [myCards, setMyCards] = useState(false);
@@ -101,14 +115,26 @@ const Cards = () => {
             ) : null}
             <div className="space-y-4">
                 {!myCards
-                    ? data.cards.map((card) => (
-                          <Card key={card.id} card={card} />
-                      ))
-                    : data.cards.map((card) => {
-                          if (card.author.id === user?.id) {
-                              return <Card key={card.id} card={card} />;
-                          }
-                      })}
+                    ? data.pages.flatMap((page) =>
+                          page.cards.map((card) => (
+                              <Card key={card.id} card={card} />
+                          )),
+                      )
+                    : data.pages.flatMap((page) =>
+                          page.cards.map((card) => {
+                              if (card.author.id === user?.id) {
+                                  return <Card key={card.id} card={card} />;
+                              }
+                          }),
+                      )}
+                {hasNextPage && (
+                    <button
+                        onClick={() => fetchNextPage()}
+                        disabled={isFetchingNextPage}
+                    >
+                        {isFetchingNextPage ? "Загрузка..." : "Загрузить ещё"}
+                    </button>
+                )}
             </div>
         </div>
     );
