@@ -123,3 +123,5 @@ POSTGRES_DB=myappdb
 ```bash
 cp .env.example .env
 cp .env.prod.example .env.prod
+```
+локальная миграция сработает если в env @postgres:порт/langs -> @localhost:порт/langs

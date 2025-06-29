@@ -10,7 +10,7 @@
         "typecheck": "tsc --noEmit --project tsconfig.json",
         "lint": "eslint .",
         "format": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
-        "pmd": "prisma migrate dev",
+        "pmd": "prisma migrate dev --create-only",
         "pgc": "prisma generate",
         "pmdeploy": "prisma migrate deploy",
         "prepare": "pnpm pgc"

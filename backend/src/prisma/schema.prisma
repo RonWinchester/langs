@@ -15,8 +15,9 @@ model Cards {
     createdAt   DateTime @default(now())
     authorId    Int
 
-    author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    pairs  Word[]
+    author     User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    pairs      Word[]
+    cardsLikes CardsLikes[]
 }
 
 model Word {
@@ -29,9 +30,22 @@ model Word {
 }
 
 model User {
+    id         Int          @id @default(autoincrement())
+    name       String       @unique
+    password   String
+    createdAt  DateTime     @default(now())
+    cards      Cards[]
+    cardsLikes CardsLikes[]
+}
+
+model CardsLikes {
     id        Int      @id @default(autoincrement())
-    name      String   @unique
-    password  String
+    cardId    Int
+    userId    Int
     createdAt DateTime @default(now())
-    cards     Cards[]
+
+    card Cards @relation(fields: [cardId], references: [id])
+    user User  @relation(fields: [userId], references: [id])
+
+    @@unique([cardId, userId])
 }

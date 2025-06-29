@@ -1,5 +1,5 @@
 import { TrpcRouterOutput } from "@langs/backend/src/router";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Heart } from "lucide-react";
 import { RefObject, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -44,9 +44,17 @@ const Card: React.FC<CardProps> = ({ card }) => {
                             <ChevronRight size={20} />
                         </div>
                     </div>
-                    {/* <div className="mt-3 text-sm text-gray-500">
-                                    {card.wordCount} слов
-                                </div> */}
+                    <div className="mt-3 text-sm text-gray-500 flex items-center gap-2">
+                        <button className="flex items-center gap-1">
+                            <Heart
+                                size={20}
+                                className={`${
+                                    card.isLiked ? "fill-red-500" : ""
+                                }`}
+                            />
+                            <span>{card.likesCount}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </Link>
@@ -72,7 +80,9 @@ const Cards = () => {
     const { user } = useAuth();
 
     const [myCards, setMyCards] = useState(false);
-    const triggerRef = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
+    const triggerRef = useRef<HTMLDivElement>(
+        null,
+    ) as RefObject<HTMLDivElement>;
 
     useInfiniteScroll({
         onScrollEnd: isFetchingNextPage ? undefined : fetchNextPage,
@@ -135,12 +145,12 @@ const Cards = () => {
                               }
                           }),
                       )}
-                      <div ref={triggerRef} className="h-0"></div>
-                      {isFetchingNextPage ? (
-                          <div className="flex justify-center">
-                              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-                          </div>
-                      ) : null}
+                <div ref={triggerRef} className="h-0"></div>
+                {isFetchingNextPage ? (
+                    <div className="flex justify-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                ) : null}
             </div>
         </div>
     );

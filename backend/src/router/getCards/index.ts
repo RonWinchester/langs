@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 import { trpc } from "../../lib/trpc";
+
 import { getCardsInput } from "./input";
 
 export const getCardsTrpcRoute = trpc.procedure
@@ -15,6 +16,16 @@ export const getCardsTrpcRoute = trpc.procedure
                 author: {
                     select: {
                         id: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        cardsLikes: true,
+                    },
+                },
+                cardsLikes: {
+                    where: {
+                        userId: ctx.user?.id,
                     },
                 },
             },
@@ -38,5 +49,11 @@ export const getCardsTrpcRoute = trpc.procedure
         const nextCursor = nextCards?.id;
         const currentCards = cards.slice(0, input.limit);
 
-        return { cards: currentCards, nextCursor };
+        const cardsWithLikes = currentCards.map((card) => ({
+            ..._.omit(card, ["_count"]),
+            likesCount: card._count.cardsLikes,
+            isLiked: card.cardsLikes.length > 0,
+        }));
+
+        return { cards: cardsWithLikes, nextCursor };
     });
