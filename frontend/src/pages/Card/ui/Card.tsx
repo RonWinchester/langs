@@ -1,5 +1,5 @@
 import { TrpcRouterOutput } from "@langs/backend/src/router";
-import { ArrowLeft, Award, Edit2 } from "lucide-react";
+import { ArrowLeft, Award, Edit2, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -14,6 +14,42 @@ const Card: React.FC<{
     refetch?: () => void;
 }> = ({ data, id, refetch }) => {
     const { user } = useAuth();
+    const trpcUtils = trpc.useUtils();
+    const setCardLike = trpc.setCardLike.useMutation({
+        onMutate: ({ isLike }) => {
+            const oldData = trpcUtils.getCard.getData({ id });
+            if (oldData) {
+                trpcUtils.getCard.setData({ id }, (old) => {
+                    if (!old) {
+                        return old;
+                    }
+                    return {
+                        ...old,
+                        likesCount: isLike ? old.likesCount + 1 : old.likesCount - 1,
+                        isLiked: isLike,
+                    };
+                });
+                return { oldData };
+            }
+        },
+        onError: (error, variables, context) => {
+            if (context?.oldData) {
+                trpcUtils.getCard.setData({ id }, context.oldData);
+            }
+        },
+        onSuccess: ({ likesCount, isLike }) => {
+            trpcUtils.getCard.setData({ id }, (old) => {
+                if (!old) {
+                    return old;
+                }
+                return {
+                    ...old,
+                    likesCount,
+                    isLiked: isLike,
+                };
+            });
+        },
+    });
 
     const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
     const [selectedRight, setSelectedRight] = useState<number | null>(null);
@@ -62,6 +98,16 @@ const Card: React.FC<{
 
     const goBack = () => {
         navigate("/");
+    };
+
+    const handleLike = async () => {
+        if (!user) {
+            return;
+        }
+        await setCardLike.mutateAsync({
+            cardId: id,
+            isLike: !data.isLiked,
+        });
     };
 
     if (!data) {
@@ -136,6 +182,22 @@ const Card: React.FC<{
                                 {new Date(data.createdAt).toLocaleDateString()}
                             </span>
                         )}
+                        <button
+                            onClick={handleLike}
+                            className={`flex items-center gap-1 ml-4 hover:text-red-500 transition-colors ${
+                                !user
+                                    ? "text-gray-400"
+                                    : "cursor-pointer"
+                            }`}
+                        >
+                            <Heart
+                                size={20}
+                                className={`${
+                                    data.isLiked ? "fill-red-500" : ""
+                                }`}
+                            />
+                            <span>{data.likesCount}</span>
+                        </button>
                     </div>
                 </div>
             </div>

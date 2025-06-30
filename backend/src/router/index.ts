@@ -9,6 +9,7 @@ import { deleteCardTrpcRoute } from "./deleteCard";
 import { getCardTrpcRoute } from "./getCard";
 import { getCardsTrpcRoute } from "./getCards";
 import { getUserTrpcRoute } from "./getUser";
+import { setCardLikeTrpcRoute } from "./setCardLike";
 import { signInTrpcRoute } from "./signIn";
 import { updateCardTrpcRoute } from "./updateCard";
 import { updateUserTrpcRoute } from "./updateUser";
@@ -24,6 +25,7 @@ export const trpcRouter = trpc.router({
     updateCard: updateCardTrpcRoute,
     deleteCard: deleteCardTrpcRoute,
     updateUser: updateUserTrpcRoute,
+    setCardLike: setCardLikeTrpcRoute,
 });
 
 export type TrpcRouter = typeof trpcRouter;

@@ -16,6 +16,19 @@ export const getCardTrpcRoute = trpc.procedure
                         name: true,
                     },
                 },
+                cardsLikes: {
+                    select: {
+                        id: true,
+                    },
+                    where: {
+                        userId: ctx.user?.id,
+                    },
+                },
+                _count: {
+                    select: {
+                        cardsLikes: true,
+                    },
+                },
             },
         });
 
@@ -44,6 +57,8 @@ export const getCardTrpcRoute = trpc.procedure
             description: card.description,
             id: card.id,
             pairs: card.pairs,
+            likesCount: card._count.cardsLikes,
+            isLiked: card.cardsLikes.length > 0,
         };
     });
 
