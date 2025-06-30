@@ -7,9 +7,16 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Theme {
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    createdAt DateTime @default(now())
+    cards     Cards[]
+}
+
 model Cards {
     id          Int      @id @default(autoincrement())
-    theme       String   @unique
+    themeId     Int
     title       String   @unique
     description String
     createdAt   DateTime @default(now())
@@ -18,6 +25,7 @@ model Cards {
     author     User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
     pairs      Word[]
     cardsLikes CardsLikes[]
+    theme      Theme?       @relation(fields: [themeId], references: [id])
 }
 
 model Word {

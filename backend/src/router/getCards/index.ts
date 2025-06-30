@@ -10,7 +10,12 @@ export const getCardsTrpcRoute = trpc.procedure
         const cards = await ctx.prisma.cards.findMany({
             select: {
                 id: true,
-                theme: true,
+                theme: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
                 title: true,
                 description: true,
                 author: {

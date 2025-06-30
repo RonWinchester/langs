@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert } from "../../../components/Alert";
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
+import ThemeSelect from "../../../components/ThemeSelect";
 import { WordPairFormElemen } from "../../../components/WordPairFormElemen";
 import { useForm } from "../../../lib/hooks/useForm";
 import { getCardRoute } from "../../../lib/router/routes";
@@ -18,11 +19,11 @@ const AddCard = () => {
     const [words, setWords] = useState<
         { original: string; translation: string }[]
     >([]);
-
+    
     const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
             title: "",
-            theme: "",
+            themeId: 0,
             description: "",
         },
         validationSchema: createCardInput,
@@ -50,7 +51,7 @@ const AddCard = () => {
             </h2>
             <Alert {...alertProps} />
 
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+            <div className="bg-white rounded-xl shadow-sm mb-6">
                 <div className="p-4">
                     <Input<typeof formik.initialValues>
                         label="Название"
@@ -59,12 +60,18 @@ const AddCard = () => {
                         disabled={formik.isSubmitting}
                         placeholder="Например: Цвета"
                     />
-                    <Input<typeof formik.initialValues>
-                        label="Тема"
-                        $name="theme"
-                        formik={formik}
+                    <ThemeSelect
+                        value={formik.values.themeId}
+                        onChange={(themeId) =>
+                            formik.setFieldValue("themeId", themeId)
+                        }
                         disabled={formik.isSubmitting}
-                        placeholder="Например: Начальный уровень"
+                        error={
+                            formik.touched.themeId && formik.errors.themeId
+                                ? String(formik.errors.themeId)
+                                : undefined
+                        }
+                        className="mb-4"
                     />
                     <Textarea<typeof formik.initialValues>
                         label="Описание"
@@ -115,11 +122,12 @@ const AddCard = () => {
                         " " +
                         (buttonProps.disabled ||
                         buttonProps.loading ||
-                        words.length < 2
+                        words.length < 2 ||
+                        !formik.values.themeId // Добавили проверку на themeId
                             ? "opacity-50 cursor-not-allowed"
                             : "")
                     }
-                    disabled={buttonProps.disabled}
+                    disabled={buttonProps.disabled || !formik.values.themeId || formik.values.themeId === 0}
                 >
                     {buttonProps.loading ? "Сохранение..." : "Сохранить набор"}
                 </button>

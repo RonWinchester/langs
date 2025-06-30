@@ -3,11 +3,13 @@ import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { trpc } from "../lib/trpc";
 
 import { createCardTrpcRoute } from "./createCard";
+import { createThemeTrpcRoute } from "./createTheme";
 import { createUserTrpcRoute } from "./createUser";
 import { createWordsTrpcRoute } from "./createWords";
 import { deleteCardTrpcRoute } from "./deleteCard";
 import { getCardTrpcRoute } from "./getCard";
 import { getCardsTrpcRoute } from "./getCards";
+import { getThemesTrpcRoute } from "./getThemes";
 import { getUserTrpcRoute } from "./getUser";
 import { setCardLikeTrpcRoute } from "./setCardLike";
 import { signInTrpcRoute } from "./signIn";
@@ -26,6 +28,8 @@ export const trpcRouter = trpc.router({
     deleteCard: deleteCardTrpcRoute,
     updateUser: updateUserTrpcRoute,
     setCardLike: setCardLikeTrpcRoute,
+    createTheme: createThemeTrpcRoute,
+    getThemes: getThemesTrpcRoute,
 });
 
 export type TrpcRouter = typeof trpcRouter;

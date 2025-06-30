@@ -6,7 +6,7 @@ export const updateCardTrpcRoute = trpc.procedure
     .input(updateCardInput)
     .mutation(async ({ ctx, input }) => {
         const { id, ...cardInput } = input;
-        const { theme, description, pairs } = cardInput;
+        const { themeId, description, pairs } = cardInput;
 
         if (!ctx.user) {
             throw new Error("Вы не авторизованы");
@@ -24,9 +24,9 @@ export const updateCardTrpcRoute = trpc.procedure
             throw new Error("Вы не можете редактировать эту карточку");
         }
 
-        if (input.theme && card.theme !== input.theme) {
+        if (input.title && card.title !== input.title) {
             const existingCard = await ctx.prisma.cards.findUnique({
-                where: { theme: input.theme },
+                where: { title: input.title, themeId },
             });
 
             if (existingCard) {
@@ -34,9 +34,10 @@ export const updateCardTrpcRoute = trpc.procedure
             }
         }
 
+        
         const updatedCard = await ctx.prisma.cards.update({
             where: { id },
-            data: { theme, description },
+            data: { themeId, description, title: input.title },
         });
 
         if (pairs) {

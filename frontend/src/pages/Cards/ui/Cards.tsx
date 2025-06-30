@@ -31,7 +31,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
                     <div className="flex justify-between items-start">
                         <div>
                             <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full mb-2">
-                                {card.theme}
+                                {card.theme?.name}
                             </span>
                             <h3 className="text-lg font-semibold">
                                 {card.title}

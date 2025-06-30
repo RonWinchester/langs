@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Alert } from "../../../components/Alert";
 import Input from "../../../components/Input";
 import Textarea from "../../../components/Textarea";
+import ThemeSelect from "../../../components/ThemeSelect";
 import { WordPairFormElemen } from "../../../components/WordPairFormElemen";
 import { useAuth } from "../../../lib/context/AppContext";
 import { useForm } from "../../../lib/hooks/useForm";
@@ -42,7 +43,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
     const { formik, buttonProps, alertProps } = useForm({
         initialValues: {
             title: card.title,
-            theme: card.theme,
+            themeId: card.theme?.id,
             description: card.description,
             pairs: words,
         },
@@ -75,7 +76,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
             <h2 className="text-xl font-semibold mb-6">{card.title}</h2>
             <Alert {...alertProps} />
             <form onSubmit={formik.handleSubmit}>
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+                <div className="bg-white rounded-xl shadow-sm mb-6">
                     <div className="p-4">
                         <Input<typeof formik.initialValues>
                             label="Название"
@@ -84,12 +85,18 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                             disabled={formik.isSubmitting}
                             placeholder="Например: Цвета"
                         />
-                        <Input<typeof formik.initialValues>
-                            label="Тема"
-                            $name="theme"
-                            formik={formik}
+                        <ThemeSelect
+                            value={formik.values.themeId}
+                            onChange={(themeId) =>
+                                formik.setFieldValue("themeId", themeId)
+                            }
                             disabled={formik.isSubmitting}
-                            placeholder="Например: Начальный уровень"
+                            error={
+                                formik.touched.themeId && formik.errors.themeId
+                                    ? String(formik.errors.themeId)
+                                    : undefined
+                            }
+                            className="mb-4"
                         />
                         <Textarea<typeof formik.initialValues>
                             label="Описание"
@@ -146,7 +153,7 @@ const EditPageComponent = ({ card }: EditPageProps) => {
                                 ? "opacity-50 cursor-not-allowed"
                                 : "")
                         }
-                        disabled={buttonProps.disabled}
+                        disabled={buttonProps.disabled || !formik.values.themeId || formik.values.themeId === 0}
                     >
                         {buttonProps.loading
                             ? "Сохранение..."

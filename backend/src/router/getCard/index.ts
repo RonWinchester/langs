@@ -24,6 +24,12 @@ export const getCardTrpcRoute = trpc.procedure
                         userId: ctx.user?.id,
                     },
                 },
+                theme: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
                 _count: {
                     select: {
                         cardsLikes: true,

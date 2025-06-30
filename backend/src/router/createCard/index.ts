@@ -10,7 +10,7 @@ export const createCardTrpcRoute = trpc.procedure
         }
         const existingCard = await ctx.prisma.cards.findUnique({
             where: {
-                theme: input.theme,
+                title: input.title,
             },
         });
 

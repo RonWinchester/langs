@@ -209,10 +209,10 @@ const Card: React.FC<{
                     </h3>
                     <div className="space-y-2">
                         {data.original
-                            .sort((a) =>
+                            .sort((a: { id: number }) =>
                                 pairs.some((p) => p.left === a.id) ? -1 : 1,
                             )
-                            .map((word) => (
+                            .map((word: { id: number; text: string }) => (
                                 <button
                                     key={word.id}
                                     className={`w-full py-3 px-4 rounded-lg text-left no-select transition-colors ${
@@ -246,10 +246,10 @@ const Card: React.FC<{
                     </h3>
                     <div className="space-y-2">
                         {data.translation
-                            .sort((a) =>
+                            .sort((a: { id: number }) =>
                                 pairs.some((p) => p.right === a.id) ? -1 : 1,
                             )
-                            .map((word) => (
+                            .map((word: { id: number; text: string }) => (
                                 <button
                                     key={word.id}
                                     className={`w-full py-3 px-4 rounded-lg text-left no-select transition-colors ${
